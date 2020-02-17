@@ -103,14 +103,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="JPS - Copy Practice Class Code to MBF07.exe" size="5236224">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="JPS - Copy Practice Class Code to MBF07.exe" size="5236736">
       <assemblyIdentity name="JPS - Copy Practice Class Code to MBF07" version="2.71.0.0" language="neutral" processorArchitecture="x86" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>ba6bvZLI4Z74wYkcP+pgdl0nXX4=</dsig:DigestValue>
+        <dsig:DigestValue>f4vNdiiCgEGZSF5SsUqlOaR5uA8=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

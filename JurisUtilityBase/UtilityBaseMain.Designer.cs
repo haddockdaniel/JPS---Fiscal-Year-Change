@@ -42,14 +42,8 @@
             this.OpenFileDialogOpen = new System.Windows.Forms.OpenFileDialog();
             this.buttonReport = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
-            this.txtFirstDate = new System.Windows.Forms.TextBox();
-            this.txtFirstMonth = new System.Windows.Forms.TextBox();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.textBox4 = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
+            this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
             ((System.ComponentModel.ISupportInitialize)(this.JurisLogoImageBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.LexisNexisLogoPictureBox)).BeginInit();
             this.statusStrip.SuspendLayout();
@@ -179,71 +173,24 @@
             this.button1.UseVisualStyleBackColor = false;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // txtFirstDate
-            // 
-            this.txtFirstDate.Location = new System.Drawing.Point(118, 181);
-            this.txtFirstDate.Name = "txtFirstDate";
-            this.txtFirstDate.Size = new System.Drawing.Size(100, 20);
-            this.txtFirstDate.TabIndex = 18;
-            this.txtFirstDate.Text = "1/01/2019";
-            // 
-            // txtFirstMonth
-            // 
-            this.txtFirstMonth.Location = new System.Drawing.Point(258, 181);
-            this.txtFirstMonth.Name = "txtFirstMonth";
-            this.txtFirstMonth.Size = new System.Drawing.Size(100, 20);
-            this.txtFirstMonth.TabIndex = 19;
-            this.txtFirstMonth.Text = "1";
-            // 
-            // textBox3
-            // 
-            this.textBox3.Location = new System.Drawing.Point(118, 232);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(100, 20);
-            this.textBox3.TabIndex = 20;
-            // 
-            // textBox4
-            // 
-            this.textBox4.Location = new System.Drawing.Point(258, 232);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(100, 20);
-            this.textBox4.TabIndex = 21;
-            // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(118, 165);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(52, 13);
+            this.label1.Size = new System.Drawing.Size(68, 13);
             this.label1.TabIndex = 22;
-            this.label1.Text = "First Date";
+            this.label1.Text = "Starting With";
+            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
-            // label2
+            // dateTimePicker1
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(255, 165);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(59, 13);
-            this.label2.TabIndex = 23;
-            this.label2.Text = "First Month";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(118, 216);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(35, 13);
-            this.label3.TabIndex = 24;
-            this.label3.Text = "label3";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(255, 216);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(35, 13);
-            this.label4.TabIndex = 25;
-            this.label4.Text = "label4";
+            this.dateTimePicker1.Location = new System.Drawing.Point(118, 181);
+            this.dateTimePicker1.MinDate = new System.DateTime(1980, 1, 1, 0, 0, 0, 0);
+            this.dateTimePicker1.Name = "dateTimePicker1";
+            this.dateTimePicker1.Size = new System.Drawing.Size(200, 20);
+            this.dateTimePicker1.TabIndex = 26;
+            this.dateTimePicker1.Value = new System.DateTime(2020, 1, 1, 0, 0, 0, 0);
             // 
             // UtilityBaseMain
             // 
@@ -252,14 +199,8 @@
             this.BackColor = System.Drawing.SystemColors.Window;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(658, 572);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.label2);
+            this.Controls.Add(this.dateTimePicker1);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.textBox4);
-            this.Controls.Add(this.textBox3);
-            this.Controls.Add(this.txtFirstMonth);
-            this.Controls.Add(this.txtFirstDate);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.buttonReport);
             this.Controls.Add(this.statusGroupBox);
@@ -275,7 +216,7 @@
             this.MinimizeBox = false;
             this.Name = "UtilityBaseMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "JPS - Copy Practice Class Code to MBF07";
+            this.Text = "JPS - Change from Fiscal Year to Calendar Year";
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.JurisLogoImageBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.LexisNexisLogoPictureBox)).EndInit();
@@ -303,14 +244,8 @@
         private System.Windows.Forms.OpenFileDialog OpenFileDialogOpen;
         private System.Windows.Forms.Button buttonReport;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.TextBox txtFirstDate;
-        private System.Windows.Forms.TextBox txtFirstMonth;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.TextBox textBox4;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.DateTimePicker dateTimePicker1;
     }
 }
 
