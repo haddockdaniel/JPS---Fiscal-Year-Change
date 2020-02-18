@@ -184,7 +184,7 @@ namespace JurisUtilityBase
                 intRetEarningsAcct = Convert.ToInt32(rsdb.Tables[0].Rows[0][0].ToString());
 
                 rsdb.Clear();
-
+                UpdateStatus("Updating the Acct Prd Table.", 1, 20);
                 strSQL = "If Exists (Select * from sysObjects where name = 'tmpPeriod') drop table tmpPeriod";
                 _jurisUtility.ExecuteSql(0, strSQL);
                 strSQL = "select * into tmpPeriod from ActngPeriod Where PrdNbr <> 0";
@@ -221,8 +221,7 @@ namespace JurisUtilityBase
                 }
 
                 rsActngPeriod.Clear();
-
-
+ 
                 strSQL = "Delete from JournalEntry "
             + "where JEDate < '" + dateTimePicker1.Value.ToString("MM/dd/yyyy") + "' ";
 
@@ -232,7 +231,7 @@ namespace JurisUtilityBase
                        + "From JournalEntry "
                        + "inner join (select * from ActngPeriod where PrdNbr <> 0) as AP on PrdStartDate = cast(month(JEDate) as varchar) + '/1/' + cast(year(JEDate) as varchar)";
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
-                UpdateStatus("Updating the Journal.", 1, 20);
+                
 
 
                 strSQL = "update JEBatchDetail "
@@ -289,7 +288,7 @@ namespace JurisUtilityBase
                 UpdateStatus("Updating ExpenseEntry", 7, 20);
 
 
-                strSQL = "Update ExpenseEntry "
+                strSQL = "If Exists (Select * from sysObjects where name = 'ExpenseEntry') Update ExpenseEntry "
                        + "Set PeriodNbr = PrdNbr, "
                        + " PeriodYear = PrdYear "
                        + "From ExpenseEntry "
@@ -309,7 +308,7 @@ namespace JurisUtilityBase
                 UpdateStatus("Updating TimeEntry", 9, 20);
 
 
-                strSQL = "Update TimeEntry "
+                strSQL = "If Exists (Select * from sysObjects where name = 'TimeEntry') Update TimeEntry "
                        + "Set PeriodNumber = PrdNbr, "
                        + " PeriodYear = PrdYear "
                        + "From TimeEntry "
@@ -486,7 +485,7 @@ namespace JurisUtilityBase
 
 
 
-                UpdateStatus("All MBF07 fields updated.", 20, 20);
+                UpdateStatus("All tables updated.", 20, 20);
                 WriteLog("FiscalYearChangeTool: Accounting Year Changed to start in month " + dateTimePicker1.Value.ToString("MM/dd/yyyy"));
 
                 MessageBox.Show("The process is complete", "Confirmation", MessageBoxButtons.OK, MessageBoxIcon.None);
