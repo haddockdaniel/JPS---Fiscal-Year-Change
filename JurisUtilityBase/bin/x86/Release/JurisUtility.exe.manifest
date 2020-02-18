@@ -175,24 +175,24 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="JurisUtility.exe" size="5222288">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="JurisUtility.exe" size="860160">
       <assemblyIdentity name="JurisUtility" version="2.71.0.0" language="neutral" processorArchitecture="x86" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>YuHOVBNd7x8Ogc1nd8NhcqGX714=</dsig:DigestValue>
+        <dsig:DigestValue>L2dUrAP4PjeRDC4dE1ENSUoHETU=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
-  <file name="FodyWeavers.xml" size="77" writeableType="applicationData">
+  <file name="FodyWeavers.xml" size="65" writeableType="applicationData">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-      <dsig:DigestValue>uW0pxaTjh8DY+RoMii1h85NFzvk=</dsig:DigestValue>
+      <dsig:DigestValue>wDcIagw45e+MdKQ7PwjyA3Y4Qpk=</dsig:DigestValue>
     </hash>
   </file>
   <file name="Graphics\Utility.ico" size="766">

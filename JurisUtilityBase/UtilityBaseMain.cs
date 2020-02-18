@@ -85,7 +85,13 @@ namespace JurisUtilityBase
             _jurisUtility.OpenDatabase();
             if (_jurisUtility.DbOpen)
             {
-                ///GetFieldLengths();
+                string dtO = "select convert(varchar(10),min(prdstartdate),101) as FirstDT, year(min(prdstartdate)) as NewDt from actngperiod";
+                DataSet ds = _jurisUtility.RecordsetFromSQL(dtO);
+                DataTable dt = ds.Tables[0];
+                dtOrig.Text = dt.Rows[0]["FirstDT"].ToString();
+                string DN = dt.Rows[0]["NewDt"].ToString();
+                int d2 = Convert.ToInt32(DN);
+                dateTimePicker1.Value = new DateTime(d2, 1,1);
             }
 
         }
@@ -118,12 +124,13 @@ namespace JurisUtilityBase
 
             DialogResult results = MessageBox.Show("WARNING: THIS PROGRAM WILL CHANGE THE FISCAL YEAR IN JURIS" + "\r\n"
                   + "ONLY RUN THIS UTILITY IF YOU HAVE BEEN ADVISED TO DO SO." + "\r\n"
-                  + "ARE YOU SURE YOU WANT TO DO THIS?", "Continue?",  MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                  + "ARE YOU SURE YOU WANT TO DO THIS?", "Continue?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
 
 
             if (results == DialogResult.Yes)
             {
+                Cursor.Current = Cursors.WaitCursor;
 
                 if (dateTimePicker1.Value < Convert.ToDateTime("01/01/1980"))
                     dteFirstDate = Convert.ToDateTime("01/01/1980");
@@ -131,6 +138,8 @@ namespace JurisUtilityBase
                     dteFirstDate = dateTimePicker1.Value;
 
                 rsdb = new DataSet();
+
+       
 
 
                 strSQL = "Select SpTxtValue from SysParam where SpName = 'RetEarnAcc'";
@@ -184,13 +193,16 @@ namespace JurisUtilityBase
                 intRetEarningsAcct = Convert.ToInt32(rsdb.Tables[0].Rows[0][0].ToString());
 
                 rsdb.Clear();
-                UpdateStatus("Updating the Acct Prd Table.", 1, 20);
+                UpdateStatus("Updating the Acct Prd Table.", 1, 20);          
+                toolStripStatusLabel.Text = "Updating the Acct Prd Table";
+                statusStrip.Refresh();
+                Application.DoEvents();
                 strSQL = "If Exists (Select * from sysObjects where name = 'tmpPeriod') drop table tmpPeriod";
                 _jurisUtility.ExecuteSql(0, strSQL);
-                strSQL = "select * into tmpPeriod from ActngPeriod Where PrdNbr <> 0";
+                strSQL = "select  prdstartdate, prdenddate, prdnbr, prdyear, prdstate  into tmpPeriod from ActngPeriod";
                 _jurisUtility.ExecuteSql(0, strSQL);
 
-                strSQL = "SELECT * FROM ActngPeriod";
+                strSQL = "SELECT prdstartdate, prdenddate, prdnbr, prdyear, prdstate FROM ActngPeriod";
                 rsActngPeriod = _jurisUtility.RecordsetFromSQL(strSQL);
                 foreach (DataRow row in rsActngPeriod.Tables[0].Rows)
                 {
@@ -220,10 +232,14 @@ namespace JurisUtilityBase
                     }
                 }
 
+      
+
+
                 rsActngPeriod.Clear();
- 
+
+
                 strSQL = "Delete from JournalEntry "
-            + "where JEDate < '" + dateTimePicker1.Value.ToString("MM/dd/yyyy") + "' ";
+         + "where JEDate < '" + dateTimePicker1.Value.ToString("MM/dd/yyyy") + "' ";
 
                 strSQL = "update JournalEntry "
                        + "Set JEPrdNbr = PrdNbr, "
@@ -231,7 +247,7 @@ namespace JurisUtilityBase
                        + "From JournalEntry "
                        + "inner join (select * from ActngPeriod where PrdNbr <> 0) as AP on PrdStartDate = cast(month(JEDate) as varchar) + '/1/' + cast(year(JEDate) as varchar)";
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
-                
+
 
 
                 strSQL = "update JEBatchDetail "
@@ -241,6 +257,9 @@ namespace JurisUtilityBase
                        + "inner join (select * from ActngPeriod where PrdNbr <> 0) as AP on PrdStartDate = cast(month(JEBDDate) as varchar) + '/1/' + cast(year(JEBDDate) as varchar)";
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
                 UpdateStatus("Updating BilledExpenses.", 2, 20);
+                toolStripStatusLabel.Text = "Updating BilledExpenses";
+                statusStrip.Refresh();
+                Application.DoEvents();
 
                 strSQL = "update BilledExpenses "
                        + "Set BEPrdNbr = PrdNbr, "
@@ -249,6 +268,9 @@ namespace JurisUtilityBase
                        + "inner join (select * from ActngPeriod where PrdNbr <> 0) as AP on PrdStartDate = cast(month(BEDate) as varchar) + '/1/' + cast(year(BEDate) as varchar)";
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
                 UpdateStatus("Updating UnbilledExpense", 3, 20);
+                toolStripStatusLabel.Text = "Updating UnbilledExpense";
+                statusStrip.Refresh();
+                Application.DoEvents();
 
 
                 strSQL = "update UnbilledExpense "
@@ -258,6 +280,10 @@ namespace JurisUtilityBase
                        + "inner join (select * from ActngPeriod where PrdNbr <> 0) as AP on PrdStartDate = cast(month(UEDate) as varchar) + '/1/' + cast(year(UEDate) as varchar)";
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
                 UpdateStatus("Updating BilledTime", 4, 20);
+                toolStripStatusLabel.Text = "Updating BilledTime";
+                statusStrip.Refresh();
+                Application.DoEvents();
+
 
                 strSQL = "update BilledTime "
                        + "Set BTPrdNbr = PrdNbr, "
@@ -266,6 +292,9 @@ namespace JurisUtilityBase
                        + "inner join (select * from ActngPeriod where PrdNbr <> 0) as AP on PrdStartDate = cast(month(BTDate) as varchar) + '/1/' + cast(year(BTDate) as varchar)";
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
                 UpdateStatus("Updating UnbilledTime", 5, 20);
+                toolStripStatusLabel.Text = "Updating UnbilledTime";
+                statusStrip.Refresh();
+                Application.DoEvents();
 
 
                 strSQL = "update UnbilledTime "
@@ -276,6 +305,9 @@ namespace JurisUtilityBase
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
 
                 UpdateStatus("Updating ExpBatchDetail", 6, 20);
+                toolStripStatusLabel.Text = "Updating ExpBatchDetail";
+                statusStrip.Refresh();
+                Application.DoEvents();
 
 
                 strSQL = "Update ExpBatchDetail "
@@ -286,6 +318,9 @@ namespace JurisUtilityBase
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
 
                 UpdateStatus("Updating ExpenseEntry", 7, 20);
+                toolStripStatusLabel.Text = "Updating ExpenseEntry";
+                statusStrip.Refresh();
+                Application.DoEvents();
 
 
                 strSQL = "If Exists (Select * from sysObjects where name = 'ExpenseEntry') Update ExpenseEntry "
@@ -296,6 +331,9 @@ namespace JurisUtilityBase
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
 
                 UpdateStatus("Updating TimeBatchDetail", 8, 20);
+                toolStripStatusLabel.Text = "Updating TimeBatchDetail";
+                statusStrip.Refresh();
+                Application.DoEvents();
 
 
                 strSQL = "Update TimeBatchDetail "
@@ -306,6 +344,9 @@ namespace JurisUtilityBase
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
 
                 UpdateStatus("Updating TimeEntry", 9, 20);
+                toolStripStatusLabel.Text = "Updating TimeEntry";
+                statusStrip.Refresh();
+                Application.DoEvents();
 
 
                 strSQL = "If Exists (Select * from sysObjects where name = 'TimeEntry') Update TimeEntry "
@@ -317,6 +358,9 @@ namespace JurisUtilityBase
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
 
                 UpdateStatus("Updating LedgerHistory", 10, 20);
+                toolStripStatusLabel.Text = "Updating LedgerHistory";
+                statusStrip.Refresh();
+                Application.DoEvents();
 
 
                 strSQL = "update LedgerHistory "
@@ -327,6 +371,9 @@ namespace JurisUtilityBase
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
 
                 UpdateStatus("Updating CashReceipt", 11, 20);
+                toolStripStatusLabel.Text = "Updating CashReceipt";
+                statusStrip.Refresh();
+                Application.DoEvents();
 
 
                 strSQL = "Update CashReceipt "
@@ -337,6 +384,9 @@ namespace JurisUtilityBase
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
 
                 UpdateStatus("Updating CreditMemo", 12, 20);
+                toolStripStatusLabel.Text = "Updating CreditMemo";
+                statusStrip.Refresh();
+                Application.DoEvents();
 
 
                 strSQL = "Update CreditMemo "
@@ -347,6 +397,9 @@ namespace JurisUtilityBase
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
 
                 UpdateStatus("Updating TrAdjBatchDetail", 13, 20);
+                toolStripStatusLabel.Text = "Updating BilledExpenses";
+                statusStrip.Refresh();
+                Application.DoEvents();
 
 
                 strSQL = "Update TrAdjBatchDetail "
@@ -357,6 +410,9 @@ namespace JurisUtilityBase
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
 
                 UpdateStatus("Updating TrustSumByPrd", 14, 20);
+                toolStripStatusLabel.Text = "Updating TrustSumByPrd";
+                statusStrip.Refresh();
+                Application.DoEvents();
 
 
                 strSQL = "If Exists (Select * from sysObjects where name = 'tmpTrustSumByPrd') drop table tmpTrustSumByPrd";
@@ -380,6 +436,9 @@ namespace JurisUtilityBase
 
                 UpdateStatus("Updating VenSumByPrd", 15, 20);
 
+                toolStripStatusLabel.Text = "Updating VenSumByPrd";
+                statusStrip.Refresh();
+                Application.DoEvents();
 
                 strSQL = "If Exists (Select * from sysObjects where name = 'tmpVenSumByPrd') drop table tmpVenSumByPrd";
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
@@ -391,9 +450,11 @@ namespace JurisUtilityBase
                        + "Set VSPPrdNbr = AP.PrdNbr, "
                        + "VSPPrdYear = AP.PrdYear "
                        + "From tmpVenSumByPrd "
-                       + "inner join (select * from tmpPeriod where PrdNbr <> 0) as OP on VSPPrdYear = PrdYear and VSPPrdNbr = PrdNbr "
-                       + "inner join (select * from ActngPeriod where PrdNbr <> 0) as AP on AP.PrdStartDate = OP.PrdStartDate";
+                          + "inner join (select * from ActngPeriod where PrdNbr <> 0) as OP on  VSPPrdYear = PrdYear and VSPPrdNbr = PrdNbr "
+                       + "inner join (select * from tmpPeriod where PrdNbr <> 0) as AP on AP.PrdStartDate = OP.PrdStartDate"
+                    ;
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
+
                 strSQL = "insert into VenSumByPrd (VSPVendor, VSPPrdYear, VSPPrdNbr, VSPVouchers, VSPPayments, VSPDiscountsTaken) "
                        + "Select VSPVendor, VSPPrdYear, VSPPrdNbr, VSPVouchers, VSPPayments, VSPDiscountsTaken from tmpVenSumByPrd";
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
@@ -401,6 +462,10 @@ namespace JurisUtilityBase
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
 
                 UpdateStatus("Updating ExpSumByPrd", 16, 20);
+                toolStripStatusLabel.Text = "Updating ExpSumByPrd";
+                statusStrip.Refresh();
+                Application.DoEvents();
+
 
 
                 strSQL = "If Exists (Select * from sysObjects where name = 'tmpExpSumByPrd') drop table tmpExpSumByPrd";
@@ -413,8 +478,8 @@ namespace JurisUtilityBase
                        + "Set ESPPrdNbr = AP.PrdNbr, "
                        + "ESPPrdYear = AP.PrdYear "
                        + "From tmpExpSumByPrd "
-                       + "inner join (select * from tmpPeriod where PrdNbr <> 0) as OP on ESPPrdYear = PrdYear and ESPPrdNbr = PrdNbr "
-                       + "inner join (select * from ActngPeriod where PrdNbr <> 0) as AP on AP.PrdStartDate = OP.PrdStartDate";
+                        + "inner join (select * from ActngPeriod where PrdNbr <> 0) as OP on ESPPrdYear = PrdYear and ESPPrdNbr = PrdNbr "
+                       + "inner join (select * from tmpPeriod where PrdNbr <> 0) as AP on   AP.PrdStartDate = OP.PrdStartDate"      ;
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
                 strSQL = "insert into ExpSumByPrd (ESPMatter, ESPExpCd, ESPPrdYear, "
                        + "ESPPrdNbr, ESPEntered, ESPBilledValue, ESPBilledAmt, ESPReceived, ESPAdjusted) "
@@ -425,6 +490,9 @@ namespace JurisUtilityBase
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
 
                 UpdateStatus("Updating FeeSumByPrd", 17, 20);
+                toolStripStatusLabel.Text = "Updating FeeSumByPrd";
+                statusStrip.Refresh();
+                Application.DoEvents();
 
 
                 strSQL = "If Exists (Select * from sysObjects where name = 'tmpFeeSumByPrd') drop table tmpFeeSumByPrd";
@@ -437,8 +505,8 @@ namespace JurisUtilityBase
                        + "Set FSPPrdNbr = AP.PrdNbr, "
                        + "FSPPrdYear = AP.PrdYear "
                        + "From tmpFeeSumByPrd "
-                       + "inner join (select * from tmpPeriod where PrdNbr <> 0) as OP on FSPPrdYear = PrdYear and FSPPrdNbr = PrdNbr "
-                       + "inner join (select * from ActngPeriod where PrdNbr <> 0) as AP on AP.PrdStartDate = OP.PrdStartDate";
+                                   + "inner join (select * from ActngPeriod where PrdNbr <> 0) as OP on FSPPrdYear = PrdYear and FSPPrdNbr = PrdNbr "
+                       + "inner join (select * from tmpPeriod where PrdNbr <> 0) as AP on   AP.PrdStartDate = OP.PrdStartDate";
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
                 strSQL = "insert into FeeSumByPrd (FSPMatter, FSPTkpr, FSPTaskCd, FSPActivityCd, FSPPrdYear, FSPPrdNbr, "
                        + "FSPWorkedHrsEntered, FSPNonBilHrsEntered, FSPBilHrsEntered, FSPFeeEnteredStdValue, "
@@ -453,6 +521,9 @@ namespace JurisUtilityBase
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
                 UpdateStatus("Updating ChartBudget", 18, 20);
 
+                toolStripStatusLabel.Text = "Updating ChartBudget";
+                statusStrip.Refresh();
+                Application.DoEvents();
 
 
                 strSQL = "insert into ChartBudget (ChbAccount, ChbPrdYear, ChbPeriod, ChbBudget, ChbNetChange) "
@@ -476,6 +547,9 @@ namespace JurisUtilityBase
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
 
                 UpdateStatus("Updating Accounting Year", 19, 20);
+                toolStripStatusLabel.Text = "Updating Accounting Year";
+                statusStrip.Refresh();
+                Application.DoEvents();
 
 
                 strSQL = "Update ActngYear "
@@ -487,9 +561,14 @@ namespace JurisUtilityBase
 
                 UpdateStatus("All tables updated.", 20, 20);
                 WriteLog("FiscalYearChangeTool: Accounting Year Changed to start in month " + dateTimePicker1.Value.ToString("MM/dd/yyyy"));
+                toolStripStatusLabel.Text = "All tables updated";
+                statusStrip.Refresh();
+                Application.DoEvents();
+                Cursor.Current = Cursors.Default;
 
                 MessageBox.Show("The process is complete", "Confirmation", MessageBoxButtons.OK, MessageBoxIcon.None);
             }
+
         }
         private bool VerifyFirmName()
         {
@@ -645,16 +724,35 @@ namespace JurisUtilityBase
 
         private void buttonReport_Click(object sender, EventArgs e)
         {
+           // if (string.IsNullOrEmpty(toAtty) || string.IsNullOrEmpty(fromAtty))
+          //      MessageBox.Show("Please select from both Timekeeper drop downs", "Selection Error");
+          //  else
+          //  {
+                //generates output of the report for before and after the change will be made to client
+                string SQLTkpr = getReportSQL();
 
-            System.Environment.Exit(0);
-          
+                DataSet myRSTkpr = _jurisUtility.RecordsetFromSQL(SQLTkpr);
+
+                ReportDisplay rpds = new ReportDisplay(myRSTkpr);
+                rpds.Show();
+
+           // }
         }
 
-
-
-        private void label1_Click(object sender, EventArgs e)
+        private string getReportSQL()
         {
+            string reportSQL = "";
+            //if matter and billing timekeeper
+            if (true)
+                reportSQL = "select Clicode, Clireportingname, Matcode, Matreportingname,empinitials as CurrentBillingTimekeeper, 'DEF' as NewBillingTimekeeper" +
+                        " from matter" +
+                        " inner join client on matclinbr=clisysnbr" +
+                        " inner join billto on matbillto=billtosysnbr" +
+                        " inner join employee on empsysnbr=billtobillingatty" +
+                        " where empinitials<>'ABC'";
 
+
+            return reportSQL;
         }
 
 

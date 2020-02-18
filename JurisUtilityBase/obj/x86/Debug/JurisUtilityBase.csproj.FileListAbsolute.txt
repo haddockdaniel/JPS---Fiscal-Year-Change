@@ -68,37 +68,20 @@ C:\Utils\.Net Juris Utils\.Net Utility Base\JurisUtilityBase\obj\x86\Debug\Juris
 C:\Utils\.Net Juris Utils\.Net Utility Base\JurisUtilityBase\obj\x86\Debug\VoucherImport.Net.exe
 C:\Utils\.Net Juris Utils\.Net Utility Base\JurisUtilityBase\obj\x86\Debug\VoucherImport.Net.pdb
 C:\Utils\.Net Juris Utils\.Net Utility Base\JurisUtilityBase\bin\x86\Debug\JurisUtility.exe.config
+C:\Users\haddocdx\Documents\Visual Studio 2012\Projects\Juris .Net Utility Base\JurisUtilityBase\bin\x86\Debug\JurisUtility.exe.config
 C:\Users\haddocdx\Documents\Visual Studio 2012\Projects\Juris .Net Utility Base\JurisUtilityBase\obj\x86\Debug\JurisUtilityBase.csproj.ResolveComReference.cache
+C:\Users\haddocdx\Documents\Visual Studio 2012\Projects\Juris .Net Utility Base\JurisUtilityBase\bin\x86\Debug\JurisUtility.exe.manifest
+C:\Users\haddocdx\Documents\Visual Studio 2012\Projects\Juris .Net Utility Base\JurisUtilityBase\bin\x86\Debug\JurisUtility.application
+C:\Users\haddocdx\Documents\Visual Studio 2012\Projects\Juris .Net Utility Base\JurisUtilityBase\bin\x86\Debug\JurisUtility.exe
+C:\Users\haddocdx\Documents\Visual Studio 2012\Projects\Juris .Net Utility Base\JurisUtilityBase\bin\x86\Debug\JurisUtility.pdb
+C:\Users\haddocdx\Documents\Visual Studio 2012\Projects\Juris .Net Utility Base\JurisUtilityBase\obj\x86\Debug\JurisUtilityBase.csprojResolveAssemblyReference.cache
 C:\Users\haddocdx\Documents\Visual Studio 2012\Projects\Juris .Net Utility Base\JurisUtilityBase\obj\x86\Debug\JurisUtilityBase.UtilityBaseMain.resources
 C:\Users\haddocdx\Documents\Visual Studio 2012\Projects\Juris .Net Utility Base\JurisUtilityBase\obj\x86\Debug\JurisUtilityBase.Properties.Resources.resources
 C:\Users\haddocdx\Documents\Visual Studio 2012\Projects\Juris .Net Utility Base\JurisUtilityBase\obj\x86\Debug\JurisUtilityBase.SplashScreen.resources
 C:\Users\haddocdx\Documents\Visual Studio 2012\Projects\Juris .Net Utility Base\JurisUtilityBase\obj\x86\Debug\JurisUtilityBase.csproj.GenerateResource.Cache
+C:\Users\haddocdx\Documents\Visual Studio 2012\Projects\Juris .Net Utility Base\JurisUtilityBase\obj\x86\Debug\JurisUtility.exe.manifest
+C:\Users\haddocdx\Documents\Visual Studio 2012\Projects\Juris .Net Utility Base\JurisUtilityBase\obj\x86\Debug\JurisUtility.application
+C:\Users\haddocdx\Documents\Visual Studio 2012\Projects\Juris .Net Utility Base\JurisUtilityBase\obj\x86\Debug\JurisUtility.exe
+C:\Users\haddocdx\Documents\Visual Studio 2012\Projects\Juris .Net Utility Base\JurisUtilityBase\obj\x86\Debug\JurisUtility.pdb
 C:\Users\haddocdx\Documents\Visual Studio 2012\Projects\Juris .Net Utility Base\JurisUtilityBase\obj\x86\Debug\JurisUtilityBase.PrinterDialog.resources
 C:\Users\haddocdx\Documents\Visual Studio 2012\Projects\Juris .Net Utility Base\JurisUtilityBase\obj\x86\Debug\JurisUtilityBase.ReportDisplay.resources
-C:\Users\haddocdx\Documents\Visual Studio 2012\Projects\Juris .Net Utility Base\JurisUtilityBase\bin\x86\Debug\JPS - Copy Practice Class Code to MBF07.exe.config
-C:\Users\haddocdx\Documents\Visual Studio 2012\Projects\Juris .Net Utility Base\JurisUtilityBase\bin\x86\Debug\JPS - Copy Practice Class Code to MBF07.exe.manifest
-C:\Users\haddocdx\Documents\Visual Studio 2012\Projects\Juris .Net Utility Base\JurisUtilityBase\bin\x86\Debug\JPS - Copy Practice Class Code to MBF07.application
-C:\Users\haddocdx\Documents\Visual Studio 2012\Projects\Juris .Net Utility Base\JurisUtilityBase\bin\x86\Debug\JPS - Copy Practice Class Code to MBF07.exe
-C:\Users\haddocdx\Documents\Visual Studio 2012\Projects\Juris .Net Utility Base\JurisUtilityBase\bin\x86\Debug\JPS - Copy Practice Class Code to MBF07.pdb
-C:\Users\haddocdx\Documents\Visual Studio 2012\Projects\Juris .Net Utility Base\JurisUtilityBase\obj\x86\Debug\JurisUtilityBase.csprojResolveAssemblyReference.cache
-C:\Users\haddocdx\Documents\Visual Studio 2012\Projects\Juris .Net Utility Base\JurisUtilityBase\obj\x86\Debug\JPS - Copy Practice Class Code to MBF07.exe.manifest
-C:\Users\haddocdx\Documents\Visual Studio 2012\Projects\Juris .Net Utility Base\JurisUtilityBase\obj\x86\Debug\JPS - Copy Practice Class Code to MBF07.application
-C:\Users\haddocdx\Documents\Visual Studio 2012\Projects\Juris .Net Utility Base\JurisUtilityBase\obj\x86\Debug\JPS - Copy Practice Class Code to MBF07.exe
-C:\Users\haddocdx\Documents\Visual Studio 2012\Projects\Juris .Net Utility Base\JurisUtilityBase\obj\x86\Debug\JPS - Copy Practice Class Code to MBF07.pdb
-D:\Projects\JPS - Fiscal Year Change\JurisUtilityBase\bin\x86\Debug\JPS - Copy Practice Class Code to MBF07.exe.config
-D:\Projects\JPS - Fiscal Year Change\JurisUtilityBase\obj\x86\Debug\JurisUtilityBase.csproj.ResolveComReference.cache
-D:\Projects\JPS - Fiscal Year Change\JurisUtilityBase\obj\x86\Debug\JPS - Copy Practice Class Code to MBF07.exe
-D:\Projects\JPS - Fiscal Year Change\JurisUtilityBase\obj\x86\Debug\JPS - Copy Practice Class Code to MBF07.pdb
-D:\Projects\JPS - Fiscal Year Change\JurisUtilityBase\obj\x86\Debug\JurisUtilityBase.csprojResolveAssemblyReference.cache
-D:\Projects\JPS - Fiscal Year Change\JurisUtilityBase\obj\x86\Debug\JurisUtilityBase.PrinterDialog.resources
-D:\Projects\JPS - Fiscal Year Change\JurisUtilityBase\obj\x86\Debug\JurisUtilityBase.ReportDisplay.resources
-D:\Projects\JPS - Fiscal Year Change\JurisUtilityBase\obj\x86\Debug\JurisUtilityBase.UtilityBaseMain.resources
-D:\Projects\JPS - Fiscal Year Change\JurisUtilityBase\obj\x86\Debug\JurisUtilityBase.Properties.Resources.resources
-D:\Projects\JPS - Fiscal Year Change\JurisUtilityBase\obj\x86\Debug\JurisUtilityBase.SplashScreen.resources
-D:\Projects\JPS - Fiscal Year Change\JurisUtilityBase\obj\x86\Debug\JurisUtilityBase.csproj.GenerateResource.Cache
-D:\Projects\JPS - Fiscal Year Change\JurisUtilityBase\bin\x86\Debug\JPS - Copy Practice Class Code to MBF07.exe.manifest
-D:\Projects\JPS - Fiscal Year Change\JurisUtilityBase\bin\x86\Debug\JPS - Copy Practice Class Code to MBF07.application
-D:\Projects\JPS - Fiscal Year Change\JurisUtilityBase\bin\x86\Debug\JPS - Copy Practice Class Code to MBF07.exe
-D:\Projects\JPS - Fiscal Year Change\JurisUtilityBase\bin\x86\Debug\JPS - Copy Practice Class Code to MBF07.pdb
-D:\Projects\JPS - Fiscal Year Change\JurisUtilityBase\obj\x86\Debug\JPS - Copy Practice Class Code to MBF07.exe.manifest
-D:\Projects\JPS - Fiscal Year Change\JurisUtilityBase\obj\x86\Debug\JPS - Copy Practice Class Code to MBF07.application

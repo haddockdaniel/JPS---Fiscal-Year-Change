@@ -40,10 +40,11 @@
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.labelPercentComplete = new System.Windows.Forms.Label();
             this.OpenFileDialogOpen = new System.Windows.Forms.OpenFileDialog();
-            this.buttonReport = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
             this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
+            this.label1 = new System.Windows.Forms.Label();
+            this.dtOrig = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.JurisLogoImageBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.LexisNexisLogoPictureBox)).BeginInit();
             this.statusStrip.SuspendLayout();
@@ -75,9 +76,9 @@
             // 
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel});
-            this.statusStrip.Location = new System.Drawing.Point(0, 550);
+            this.statusStrip.Location = new System.Drawing.Point(0, 354);
             this.statusStrip.Name = "statusStrip";
-            this.statusStrip.Size = new System.Drawing.Size(658, 22);
+            this.statusStrip.Size = new System.Drawing.Size(669, 22);
             this.statusStrip.TabIndex = 2;
             // 
             // toolStripStatusLabel
@@ -104,7 +105,7 @@
             this.labelDescription.Name = "labelDescription";
             this.labelDescription.Size = new System.Drawing.Size(268, 69);
             this.labelDescription.TabIndex = 1;
-            this.labelDescription.Text = "Copies Practice Class code into MatterBillingField07 (MFB07)";
+            this.labelDescription.Text = "JPS - Fiscal Year Change";
             // 
             // statusGroupBox
             // 
@@ -147,50 +148,47 @@
             // 
             this.OpenFileDialogOpen.FileName = "openFileDialog1";
             // 
-            // buttonReport
-            // 
-            this.buttonReport.BackColor = System.Drawing.Color.LightGray;
-            this.buttonReport.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonReport.ForeColor = System.Drawing.Color.MidnightBlue;
-            this.buttonReport.Location = new System.Drawing.Point(111, 479);
-            this.buttonReport.Name = "buttonReport";
-            this.buttonReport.Size = new System.Drawing.Size(148, 38);
-            this.buttonReport.TabIndex = 16;
-            this.buttonReport.Text = "Exit";
-            this.buttonReport.UseVisualStyleBackColor = false;
-            this.buttonReport.Click += new System.EventHandler(this.buttonReport_Click);
-            // 
             // button1
             // 
-            this.button1.BackColor = System.Drawing.Color.LightGray;
-            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.ForeColor = System.Drawing.Color.MidnightBlue;
-            this.button1.Location = new System.Drawing.Point(467, 479);
+            this.button1.Location = new System.Drawing.Point(315, 286);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(148, 38);
-            this.button1.TabIndex = 17;
-            this.button1.Text = "Run";
-            this.button1.UseVisualStyleBackColor = false;
+            this.button1.Size = new System.Drawing.Size(158, 41);
+            this.button1.TabIndex = 6;
+            this.button1.Text = "Update Fiscal Year";
+            this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // dateTimePicker1
+            // 
+            this.dateTimePicker1.Location = new System.Drawing.Point(354, 207);
+            this.dateTimePicker1.Name = "dateTimePicker1";
+            this.dateTimePicker1.Size = new System.Drawing.Size(200, 20);
+            this.dateTimePicker1.TabIndex = 7;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(118, 165);
+            this.label1.Location = new System.Drawing.Point(146, 213);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(68, 13);
-            this.label1.TabIndex = 22;
-            this.label1.Text = "Starting With";
-            this.label1.Click += new System.EventHandler(this.label1_Click);
+            this.label1.Size = new System.Drawing.Size(202, 13);
+            this.label1.TabIndex = 8;
+            this.label1.Text = "Select New First Day of First Year in Data";
             // 
-            // dateTimePicker1
+            // dtOrig
             // 
-            this.dateTimePicker1.Location = new System.Drawing.Point(118, 181);
-            this.dateTimePicker1.MinDate = new System.DateTime(1980, 1, 1, 0, 0, 0, 0);
-            this.dateTimePicker1.Name = "dateTimePicker1";
-            this.dateTimePicker1.Size = new System.Drawing.Size(200, 20);
-            this.dateTimePicker1.TabIndex = 26;
-            this.dateTimePicker1.Value = new System.DateTime(2020, 1, 1, 0, 0, 0, 0);
+            this.dtOrig.Location = new System.Drawing.Point(354, 157);
+            this.dtOrig.Name = "dtOrig";
+            this.dtOrig.Size = new System.Drawing.Size(200, 20);
+            this.dtOrig.TabIndex = 9;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(194, 164);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(145, 13);
+            this.label2.TabIndex = 10;
+            this.label2.Text = "Original First Fiscal Year Date";
             // 
             // UtilityBaseMain
             // 
@@ -198,11 +196,12 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Window;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.ClientSize = new System.Drawing.Size(658, 572);
-            this.Controls.Add(this.dateTimePicker1);
+            this.ClientSize = new System.Drawing.Size(669, 376);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.dtOrig);
             this.Controls.Add(this.label1);
+            this.Controls.Add(this.dateTimePicker1);
             this.Controls.Add(this.button1);
-            this.Controls.Add(this.buttonReport);
             this.Controls.Add(this.statusGroupBox);
             this.Controls.Add(this.labelDescription);
             this.Controls.Add(this.listBoxCompanies);
@@ -216,7 +215,7 @@
             this.MinimizeBox = false;
             this.Name = "UtilityBaseMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "JPS - Change from Fiscal Year to Calendar Year";
+            this.Text = "JPS - Fiscal Year Change";
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.JurisLogoImageBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.LexisNexisLogoPictureBox)).EndInit();
@@ -242,10 +241,11 @@
         private System.Windows.Forms.ProgressBar progressBar;
         private System.Windows.Forms.Label labelPercentComplete;
         private System.Windows.Forms.OpenFileDialog OpenFileDialogOpen;
-        private System.Windows.Forms.Button buttonReport;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.DateTimePicker dateTimePicker1;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox dtOrig;
+        private System.Windows.Forms.Label label2;
     }
 }
 

@@ -24,3 +24,92 @@ C:\Utils\.Net Juris Utils\Juris Utility Base\JurisUtilityBase\obj\x86\Release\Ju
 C:\Utils\.Net Juris Utils\Juris Utility Base\JurisUtilityBase\obj\x86\Release\JurisUtility.application
 C:\Utils\.Net Juris Utils\Juris Utility Base\JurisUtilityBase\obj\x86\Release\JurisUtility.exe
 C:\Utils\.Net Juris Utils\Juris Utility Base\JurisUtilityBase\obj\x86\Release\JurisUtility.pdb
+D:\Utilities Source\Juris .Net Utility Base\JurisUtilityBase\bin\x86\Release\JurisUtility.exe.config
+D:\Utilities Source\Juris .Net Utility Base\JurisUtilityBase\bin\x86\Release\JurisUtility.exe.manifest
+D:\Utilities Source\Juris .Net Utility Base\JurisUtilityBase\bin\x86\Release\JurisUtility.application
+D:\Utilities Source\Juris .Net Utility Base\JurisUtilityBase\bin\x86\Release\JurisUtility.exe
+D:\Utilities Source\Juris .Net Utility Base\JurisUtilityBase\bin\x86\Release\JurisUtility.pdb
+D:\Utilities Source\Juris .Net Utility Base\JurisUtilityBase\bin\x86\Release\C1.C1Report.4.dll
+D:\Utilities Source\Juris .Net Utility Base\JurisUtilityBase\bin\x86\Release\C1.Win.C1Input.4.dll
+D:\Utilities Source\Juris .Net Utility Base\JurisUtilityBase\bin\x86\Release\C1.Win.C1Report.4.dll
+D:\Utilities Source\Juris .Net Utility Base\JurisUtilityBase\bin\x86\Release\Gizmox.Extensions.dll
+D:\Utilities Source\Juris .Net Utility Base\JurisUtilityBase\bin\x86\Release\Ionic.Zlib.dll
+D:\Utilities Source\Juris .Net Utility Base\JurisUtilityBase\bin\x86\Release\JurisAuthenticator.dll
+D:\Utilities Source\Juris .Net Utility Base\JurisUtilityBase\bin\x86\Release\JurisDBO21.dll
+D:\Utilities Source\Juris .Net Utility Base\JurisUtilityBase\bin\x86\Release\JurisIDef21.dll
+D:\Utilities Source\Juris .Net Utility Base\JurisUtilityBase\bin\x86\Release\JurisStr21.dll
+D:\Utilities Source\Juris .Net Utility Base\JurisUtilityBase\bin\x86\Release\JurisStr221.dll
+D:\Utilities Source\Juris .Net Utility Base\JurisUtilityBase\bin\x86\Release\JurisSVR21.dll
+D:\Utilities Source\Juris .Net Utility Base\JurisUtilityBase\obj\x86\Release\JurisUtilityBase.csprojAssemblyReference.cache
+D:\Utilities Source\Juris .Net Utility Base\JurisUtilityBase\obj\x86\Release\JurisUtilityBase.csproj.ResolveComReference.cache
+D:\Utilities Source\Juris .Net Utility Base\JurisUtilityBase\obj\x86\Release\JurisUtilityBase.PrinterDialog.resources
+D:\Utilities Source\Juris .Net Utility Base\JurisUtilityBase\obj\x86\Release\JurisUtilityBase.ReportDisplay.resources
+D:\Utilities Source\Juris .Net Utility Base\JurisUtilityBase\obj\x86\Release\JurisUtilityBase.UtilityBaseMain.resources
+D:\Utilities Source\Juris .Net Utility Base\JurisUtilityBase\obj\x86\Release\JurisUtilityBase.Properties.Resources.resources
+D:\Utilities Source\Juris .Net Utility Base\JurisUtilityBase\obj\x86\Release\JurisUtilityBase.SplashScreen.resources
+D:\Utilities Source\Juris .Net Utility Base\JurisUtilityBase\obj\x86\Release\JurisUtilityBase.csproj.GenerateResource.cache
+D:\Utilities Source\Juris .Net Utility Base\JurisUtilityBase\obj\x86\Release\JurisUtilityBase.csproj.CoreCompileInputs.cache
+D:\Utilities Source\Juris .Net Utility Base\JurisUtilityBase\obj\x86\Release\JurisUtility.exe.manifest
+D:\Utilities Source\Juris .Net Utility Base\JurisUtilityBase\obj\x86\Release\JurisUtility.application
+D:\Utilities Source\Juris .Net Utility Base\JurisUtilityBase\obj\x86\Release\JurisUtilityBase.csproj.CopyComplete
+D:\Utilities Source\Juris .Net Utility Base\JurisUtilityBase\obj\x86\Release\JurisUtility.exe
+D:\Utilities Source\Juris .Net Utility Base\JurisUtilityBase\obj\x86\Release\JurisUtility.pdb
+D:\Utilities Source\JURIS UTILITY BASE\Juris .Net Utility Base\JurisUtilityBase\bin\x86\Release\C1.C1Report.4.dll
+D:\Utilities Source\JURIS UTILITY BASE\Juris .Net Utility Base\JurisUtilityBase\bin\x86\Release\C1.Win.C1Input.4.dll
+D:\Utilities Source\JURIS UTILITY BASE\Juris .Net Utility Base\JurisUtilityBase\bin\x86\Release\C1.Win.C1Report.4.dll
+D:\Utilities Source\JURIS UTILITY BASE\Juris .Net Utility Base\JurisUtilityBase\bin\x86\Release\Gizmox.Extensions.dll
+D:\Utilities Source\JURIS UTILITY BASE\Juris .Net Utility Base\JurisUtilityBase\bin\x86\Release\Ionic.Zlib.dll
+D:\Utilities Source\JURIS UTILITY BASE\Juris .Net Utility Base\JurisUtilityBase\bin\x86\Release\JurisAuthenticator.dll
+D:\Utilities Source\JURIS UTILITY BASE\Juris .Net Utility Base\JurisUtilityBase\bin\x86\Release\JurisDBO21.dll
+D:\Utilities Source\JURIS UTILITY BASE\Juris .Net Utility Base\JurisUtilityBase\bin\x86\Release\JurisIDef21.dll
+D:\Utilities Source\JURIS UTILITY BASE\Juris .Net Utility Base\JurisUtilityBase\bin\x86\Release\JurisStr21.dll
+D:\Utilities Source\JURIS UTILITY BASE\Juris .Net Utility Base\JurisUtilityBase\bin\x86\Release\JurisStr221.dll
+D:\Utilities Source\JURIS UTILITY BASE\Juris .Net Utility Base\JurisUtilityBase\bin\x86\Release\JurisSVR21.dll
+D:\Utilities Source\JURIS UTILITY BASE\Juris .Net Utility Base\JurisUtilityBase\obj\x86\Release\JurisUtilityBase.csprojAssemblyReference.cache
+D:\Utilities Source\JURIS UTILITY BASE\Juris .Net Utility Base\JurisUtilityBase\obj\x86\Release\JurisUtilityBase.csproj.ResolveComReference.cache
+D:\Utilities Source\JURIS UTILITY BASE\Juris .Net Utility Base\JurisUtilityBase\obj\x86\Release\JurisUtilityBase.PrinterDialog.resources
+D:\Utilities Source\JURIS UTILITY BASE\Juris .Net Utility Base\JurisUtilityBase\obj\x86\Release\JurisUtilityBase.ReportDisplay.resources
+D:\Utilities Source\JURIS UTILITY BASE\Juris .Net Utility Base\JurisUtilityBase\obj\x86\Release\JurisUtilityBase.UtilityBaseMain.resources
+D:\Utilities Source\JURIS UTILITY BASE\Juris .Net Utility Base\JurisUtilityBase\obj\x86\Release\JurisUtilityBase.Properties.Resources.resources
+D:\Utilities Source\JURIS UTILITY BASE\Juris .Net Utility Base\JurisUtilityBase\obj\x86\Release\JurisUtilityBase.SplashScreen.resources
+D:\Utilities Source\JURIS UTILITY BASE\Juris .Net Utility Base\JurisUtilityBase\obj\x86\Release\JurisUtilityBase.csproj.GenerateResource.cache
+D:\Utilities Source\JURIS UTILITY BASE\Juris .Net Utility Base\JurisUtilityBase\obj\x86\Release\JurisUtilityBase.csproj.CoreCompileInputs.cache
+D:\Utilities Source\JURIS UTILITY BASE\Juris .Net Utility Base\JurisUtilityBase\obj\x86\Release\JurisUtilityBase.csproj.CopyComplete
+D:\Utilities Source\JURIS UTILITY BASE\Juris .Net Utility Base\JurisUtilityBase\bin\x86\Release\SBBB Fix Chart of Accounts.exe.config
+D:\Utilities Source\JURIS UTILITY BASE\Juris .Net Utility Base\JurisUtilityBase\bin\x86\Release\SBBB Fix Chart of Accounts.exe.manifest
+D:\Utilities Source\JURIS UTILITY BASE\Juris .Net Utility Base\JurisUtilityBase\bin\x86\Release\SBBB Fix Chart of Accounts.application
+D:\Utilities Source\JURIS UTILITY BASE\Juris .Net Utility Base\JurisUtilityBase\bin\x86\Release\SBBB Fix Chart of Accounts.exe
+D:\Utilities Source\JURIS UTILITY BASE\Juris .Net Utility Base\JurisUtilityBase\bin\x86\Release\SBBB Fix Chart of Accounts.pdb
+D:\Utilities Source\JURIS UTILITY BASE\Juris .Net Utility Base\JurisUtilityBase\obj\x86\Release\SBBB Fix Chart of Accounts.exe.manifest
+D:\Utilities Source\JURIS UTILITY BASE\Juris .Net Utility Base\JurisUtilityBase\obj\x86\Release\SBBB Fix Chart of Accounts.application
+D:\Utilities Source\JURIS UTILITY BASE\Juris .Net Utility Base\JurisUtilityBase\obj\x86\Release\SBBB Fix Chart of Accounts.exe
+D:\Utilities Source\JURIS UTILITY BASE\Juris .Net Utility Base\JurisUtilityBase\obj\x86\Release\SBBB Fix Chart of Accounts.pdb
+D:\Utility Repository\JPS---Fiscal-Year-Change\JurisUtilityBase\bin\x86\Release\JPS - Fiscal Year Change.exe.config
+D:\Utility Repository\JPS---Fiscal-Year-Change\JurisUtilityBase\bin\x86\Release\JPS - Fiscal Year Change.exe.manifest
+D:\Utility Repository\JPS---Fiscal-Year-Change\JurisUtilityBase\bin\x86\Release\JPS - Fiscal Year Change.application
+D:\Utility Repository\JPS---Fiscal-Year-Change\JurisUtilityBase\bin\x86\Release\JPS - Fiscal Year Change.exe
+D:\Utility Repository\JPS---Fiscal-Year-Change\JurisUtilityBase\bin\x86\Release\JPS - Fiscal Year Change.pdb
+D:\Utility Repository\JPS---Fiscal-Year-Change\JurisUtilityBase\bin\x86\Release\C1.C1Report.4.dll
+D:\Utility Repository\JPS---Fiscal-Year-Change\JurisUtilityBase\bin\x86\Release\C1.Win.C1Input.4.dll
+D:\Utility Repository\JPS---Fiscal-Year-Change\JurisUtilityBase\bin\x86\Release\C1.Win.C1Report.4.dll
+D:\Utility Repository\JPS---Fiscal-Year-Change\JurisUtilityBase\bin\x86\Release\Gizmox.Extensions.dll
+D:\Utility Repository\JPS---Fiscal-Year-Change\JurisUtilityBase\bin\x86\Release\Ionic.Zlib.dll
+D:\Utility Repository\JPS---Fiscal-Year-Change\JurisUtilityBase\bin\x86\Release\JurisAuthenticator.dll
+D:\Utility Repository\JPS---Fiscal-Year-Change\JurisUtilityBase\bin\x86\Release\JurisDBO21.dll
+D:\Utility Repository\JPS---Fiscal-Year-Change\JurisUtilityBase\bin\x86\Release\JurisIDef21.dll
+D:\Utility Repository\JPS---Fiscal-Year-Change\JurisUtilityBase\bin\x86\Release\JurisStr21.dll
+D:\Utility Repository\JPS---Fiscal-Year-Change\JurisUtilityBase\bin\x86\Release\JurisStr221.dll
+D:\Utility Repository\JPS---Fiscal-Year-Change\JurisUtilityBase\bin\x86\Release\JurisSVR21.dll
+D:\Utility Repository\JPS---Fiscal-Year-Change\JurisUtilityBase\obj\x86\Release\JurisUtilityBase.csproj.ResolveComReference.cache
+D:\Utility Repository\JPS---Fiscal-Year-Change\JurisUtilityBase\obj\x86\Release\JurisUtilityBase.PrinterDialog.resources
+D:\Utility Repository\JPS---Fiscal-Year-Change\JurisUtilityBase\obj\x86\Release\JurisUtilityBase.ReportDisplay.resources
+D:\Utility Repository\JPS---Fiscal-Year-Change\JurisUtilityBase\obj\x86\Release\JurisUtilityBase.UtilityBaseMain.resources
+D:\Utility Repository\JPS---Fiscal-Year-Change\JurisUtilityBase\obj\x86\Release\JurisUtilityBase.Properties.Resources.resources
+D:\Utility Repository\JPS---Fiscal-Year-Change\JurisUtilityBase\obj\x86\Release\JurisUtilityBase.SplashScreen.resources
+D:\Utility Repository\JPS---Fiscal-Year-Change\JurisUtilityBase\obj\x86\Release\JurisUtilityBase.csproj.GenerateResource.cache
+D:\Utility Repository\JPS---Fiscal-Year-Change\JurisUtilityBase\obj\x86\Release\JurisUtilityBase.csproj.CoreCompileInputs.cache
+D:\Utility Repository\JPS---Fiscal-Year-Change\JurisUtilityBase\obj\x86\Release\JPS - Fiscal Year Change.exe.manifest
+D:\Utility Repository\JPS---Fiscal-Year-Change\JurisUtilityBase\obj\x86\Release\JPS - Fiscal Year Change.application
+D:\Utility Repository\JPS---Fiscal-Year-Change\JurisUtilityBase\obj\x86\Release\JurisUtilityBase.csproj.CopyComplete
+D:\Utility Repository\JPS---Fiscal-Year-Change\JurisUtilityBase\obj\x86\Release\JPS - Fiscal Year Change.exe
+D:\Utility Repository\JPS---Fiscal-Year-Change\JurisUtilityBase\obj\x86\Release\JPS - Fiscal Year Change.pdb

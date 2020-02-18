@@ -127,15 +127,7 @@ namespace JurisUtilityBase
 
         public int ExecuteNonQuery(int connection, string sql)
         {
-            try
-            {
-                return _connections[connection].ExecuteNonQuery(sql);
-            }
-            catch (Exception ee)
-            {
-                MessageBox.Show(sql);
-                return 0;
-            }
+            return _connections[connection].ExecuteNonQuery(sql);
         }
 
         public DataSet RecordsetFromSQL(string sql)

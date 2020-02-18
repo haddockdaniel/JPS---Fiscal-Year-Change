@@ -56,9 +56,9 @@
             // 
             this.labelAppName.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelAppName.ForeColor = System.Drawing.Color.Blue;
-            this.labelAppName.Location = new System.Drawing.Point(48, 128);
+            this.labelAppName.Location = new System.Drawing.Point(11, 128);
             this.labelAppName.Name = "labelAppName";
-            this.labelAppName.Size = new System.Drawing.Size(238, 23);
+            this.labelAppName.Size = new System.Drawing.Size(312, 23);
             this.labelAppName.TabIndex = 1;
             this.labelAppName.Text = "[App Name]";
             this.labelAppName.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -126,7 +126,7 @@
             this.BackColor = System.Drawing.SystemColors.Window;
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.ClientSize = new System.Drawing.Size(331, 331);
+            this.ClientSize = new System.Drawing.Size(327, 327);
             this.ControlBox = false;
             this.Controls.Add(this.labelCompany);
             this.Controls.Add(this.labelCopyright);
