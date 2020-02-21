@@ -515,7 +515,7 @@ namespace JurisUtilityBase
                 statusStrip.Refresh();
                 Application.DoEvents();
 
-                //reassign
+                //reassign non zero
                 strSQL = "If Exists (Select * from sysObjects where name = 'tmpChartBudget') drop table tmpChartBudget";
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
                 strSQL = "select * into tmpChartBudget from ChartBudget";
@@ -532,27 +532,23 @@ namespace JurisUtilityBase
                     " select [ChbAccount] ,[ChbPrdYear] ,[ChbPeriod] ,[ChbBudget] ,[ChbNetChange] from tmpChartBudget ";
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
 
-                //now deal with running balance totals (prd = 0)
-                strSQL = "insert into ChartBudget (ChbAccount, ChbPrdYear, ChbPeriod, ChbBudget, ChbNetChange) "
-                       + "SELECT distinct JEAccount, JEPrdYear, JEPrdNbr, 0.00 as Budget, 0.00 as Net "
-                       + "From JournalEntry "
-                       + "left join ChartBudget on ChbAccount = JEAccount and ChbPrdYear = JEPrdYear and ChbPeriod = JEPrdNbr "
-                       + "Where ChbAccount Is Null";
-                _jurisUtility.ExecuteNonQuery(0, strSQL);
+
+                strSQL = "select min(ayyear) as FirstYr from actngyear";
+                rsdb = _jurisUtility.RecordsetFromSQL(strSQL);
+
+                DateTime tempdt = Convert.ToDateTime("01/01/" + rsdb.Tables[0].Rows[0][0].ToString());
+
+                int diff = (dteFirstDate.Year - tempdt.Year);
+                
+
+                //reassign zero
+
+
                 strSQL = "Update ChartBudget "
-                       + "Set ChbNetChange = 0.00 where ChbPeriod = 0";
+                        + " set ChbPrdYear = ChbPrdYear + " + diff.ToString() 
+                        + " where  ChbPeriod = 0";
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
-                strSQL = "Update ChartBudget "
-                       + "Set ChbNetChange = JE.JENetChange "
-                       + "From ChartBudget "
-                       + "inner join ("
-                       + "SELECT JEAccount, JEPrdYear, sum(JEAmount) as JENetChange "
-                       + "FROM JournalEntry "
-                       + "where JEDate >= '" + dateTimePicker1.Value.ToString("MM/dd/yyyy") + "' "
-                       + "group by JEAccount, JEPrdYear) as JE "
-                       + "on JEAccount = ChbAccount and JEPrdYear = ChbPrdYear "
-                       + " where ChbPeriod = 0 ";
-                _jurisUtility.ExecuteNonQuery(0, strSQL);
+
 				
 
                 UpdateStatus("Updating Accounting Year", 19, 20);
@@ -572,38 +568,12 @@ namespace JurisUtilityBase
                 strSQL = "drop table tmpPeriod";
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
 
-                strSQL = "select ayyear from actngyear where AYYear not in (select PrdYear from ActngPeriod)";
-                rsdb = _jurisUtility.RecordsetFromSQL(strSQL);
+                strSQL = "delete from actngyear where ayyear not in (select PrdYear from ActngPeriod)";
+                _jurisUtility.ExecuteNonQuery(0, strSQL);
 
-                //does the new start year exist?
-                if (rsdb != null && rsdb.Tables.Count != 0 || rsdb.Tables[0].Rows.Count != 0)
-                {
-                    for (int i = 0; i < 13; i++)
-                    {
-                        if (i == 0)
-                        {
-                            strSQL = "  insert into actngperiod ([PrdYear] " +
-                                     " ,[PrdNbr] " +
-                                     " ,[PrdStartDate] " +
-                                     " ,[PrdEndDate] " +
-                                     " ,[PrdState]) " +
-                                     " values  (" + rsdb.Tables[0].Rows[0][0].ToString() + ", 0, '01/01/" + rsdb.Tables[0].Rows[0][0].ToString() + "', '12/31/" + rsdb.Tables[0].Rows[0][0].ToString() + "', 0)";
-                            _jurisUtility.ExecuteNonQuery(0, strSQL);
-                        }
-                        else
-                        {
-                            DateTime dt = new DateTime(Convert.ToInt32(rsdb.Tables[0].Rows[0][0].ToString()), i, 1);
-                            strSQL = "  insert into actngperiod ([PrdYear] " +
-                                     " ,[PrdNbr] " +
-                                     " ,[PrdStartDate] " +
-                                     " ,[PrdEndDate] " +
-                                     " ,[PrdState]) " +
-                                     " values  (" + rsdb.Tables[0].Rows[0][0].ToString() + ", " + i.ToString() + ", '" + i.ToString() + "/01/" + rsdb.Tables[0].Rows[0][0].ToString() + "', '" + dt.AddMonths(1).AddDays(-1).ToString("MM/dd/yyyy") + "', 0)";
-                            _jurisUtility.ExecuteNonQuery(0, strSQL);
-                        }
+                strSQL = "delete from documenttree where dtdocclass = 2000 and DTKeyL = '2020'";
+                _jurisUtility.ExecuteNonQuery(0, strSQL);
 
-                    }
-                }
 
                 strSQL = "Update ActngYear "
                             + "set AYCloseStatus = 'N' "
