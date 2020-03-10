@@ -134,7 +134,7 @@ namespace JurisUtilityBase
                     dteFirstDate = dateTimePicker1.Value;
 
                 rsdb = new DataSet();
-
+                
 
                 strSQL = "Select SpTxtValue from SysParam where SpName = 'RetEarnAcc'";
                 rsdb = _jurisUtility.RecordsetFromSQL(strSQL);
@@ -195,72 +195,126 @@ namespace JurisUtilityBase
 
 
                 strSQL = "select ayyear from ActngYear where AYYear = DATEPART(year, '" + dateTimePicker1.Value.ToString("MM/dd/yyyy") + "')";
-                rsdb = _jurisUtility.RecordsetFromSQL(strSQL);
+               rsdb = _jurisUtility.RecordsetFromSQL(strSQL);
 
                 //does the new start year exist?
                 if (rsdb == null || rsdb.Tables.Count == 0 || rsdb.Tables[0].Rows.Count == 0)
                 {
                     strSQL = "insert into ActngYear ([AYYear]  ,[AYNbrOfPrds] ,[AYCloseStatus]) values (" + "DATEPART(year, '" + dateTimePicker1.Value.ToString("MM/dd/yyyy") + "'), 12, 'Y')";
+                    _jurisUtility.ExecuteNonQuery(0, strSQL);
+                    strSQL = "insert into documenttree (dtdocid, [DTSystemCreated] ,[DTDocClass] ,[DTDocType],[DTParentID] ,[DTTitle] ,[DTKeyL],[DTKeyT]) " +
+                       " values ((select max(dtdocid) + 1 from documenttree), 'Y', 2000, 'R', (select dtdocid from documenttree where dtdocclass = 2000 and dttitle = 'Accounting Periods'), " +
+                       "'" + dateTimePicker1.Value.Year.ToString() + "', '" + dateTimePicker1.Value.Year.ToString() + "', null)";
+                      _jurisUtility.ExecuteNonQuery(0, strSQL);
                 }
 
                 rsdb.Clear();
-                strSQL = "select  prdstartdate, prdenddate, prdnbr, prdyear, prdstate  into tmpPeriod from ActngPeriod";
+
+                strSQL = "select max(AYYear) from ActngYear";
+                rsdb = _jurisUtility.RecordsetFromSQL(strSQL);
+
+                int finalYr = Convert.ToInt32(rsdb.Tables[0].Rows[0][0].ToString());
+
+                rsdb.Clear();
+
+                strSQL = "select AYYear from ActngYear order by AYYear";
+                rsdb = _jurisUtility.RecordsetFromSQL(strSQL);
+
+                strSQL = "create table tmpperiod  (prdstartdate datetime null, prdenddate datetime null, prdnbr int null, prdyear int null, prdstate int null, oldPrd int null, oldYr int null)";
                 _jurisUtility.ExecuteSql(0, strSQL);
-                 strSQL = "alter table tmpperiod add newDateStart datetime null";
-                _jurisUtility.ExecuteNonQuery(0, strSQL);
-                 strSQL = "alter table tmpperiod add newDateEnd datetime null";
-                _jurisUtility.ExecuteNonQuery(0, strSQL);
-                 strSQL = "alter table tmpperiod add newprd int null";
-                _jurisUtility.ExecuteNonQuery(0, strSQL);
-                strSQL = "alter table tmpperiod add newyr int null";
-                _jurisUtility.ExecuteNonQuery(0, strSQL);
 
+                foreach (DataRow rr in rsdb.Tables[0].Rows)
+                {
+                    for (int i = 0; i < 13; i++)
+                    {
+                        if (i == 0)
+                        {
+                            int year = Convert.ToInt32(rr[0].ToString());
+                            DateTime firstDay = new DateTime(year, 1, 1);
+                            DateTime lastDay = new DateTime(year, 12, 31);
+                            strSQL = "insert into tmpPeriod (prdstartdate, prdenddate, prdnbr, prdyear, prdstate) "
+                             + "values ('" + firstDay.ToShortDateString() + "', '" + lastDay.ToShortDateString() + "', " + i.ToString() + ", " + rr[0].ToString() + ", 0 )";
+                            _jurisUtility.ExecuteSql(0, strSQL);
+                        }
+                        else
+                        {
+                            DateTime ss = new DateTime(Convert.ToInt32(rr[0].ToString()), i, 1);
+                            
+                            strSQL = "insert into tmpPeriod (prdstartdate, prdenddate, prdnbr, prdyear, prdstate) "
+                             + "values ('" + i.ToString() + "/01/" + rr[0].ToString() + "', '" + ss.AddMonths(1).AddDays(-1).ToShortDateString() + "', " + i.ToString() + ", " + rr[0].ToString() + ", 0 )";
+                            _jurisUtility.ExecuteSql(0, strSQL);
 
-                int diffInMonths = ((dteFirstDate.Year - origStartDate.Year) * 12) + dteFirstDate.Month - origStartDate.Month;
+                        }
+                        
+                    }
 
-                strSQL = "update tmpperiod set newdatestart =   DateAdd(month," + diffInMonths.ToString() +",prdstartdate) where prdnbr <> 0";
-                _jurisUtility.ExecuteNonQuery(0, strSQL);
-                strSQL = "update tmpperiod set newdateend =   DATEADD(d, -1, DATEADD(m, DATEDIFF(m, 0, newdatestart) + 1, 0)) where prdnbr <> 0";
-                _jurisUtility.ExecuteNonQuery(0, strSQL);
-                strSQL = "update tmpperiod set newprd = DATEPART(m, newdatestart) where prdnbr <> 0";
-                _jurisUtility.ExecuteNonQuery(0, strSQL);
-                strSQL = "update tmpperiod set newyr = DATEPART(year, newdatestart) where prdnbr <> 0 ";
-                _jurisUtility.ExecuteNonQuery(0, strSQL);
-                strSQL = "update tmpperiod set newdatestart = '01/01/' + cast(DATEPART(year, prdstartdate) as varchar(5)), newdateend = '12/31/' + cast(DATEPART(year, prdstartdate) as varchar(5)) where prdnbr = 0";
-                _jurisUtility.ExecuteNonQuery(0, strSQL);
-                strSQL = "update tmpPeriod set newprd = 0, newyr = DATEPART(year, newdatestart) where prdnbr = 0";
-                _jurisUtility.ExecuteNonQuery(0, strSQL);
+                }
 
+                strSQL = "  update tmpperiod set oldprd = at.PrdNbr, oldyr = at.PrdYear " +
+                        " from tmpperiod tt " +
+                        " inner join ActngPeriod at on at.PrdStartDate = tt.PrdStartDate and " +
+                        " at.PrdEndDate = tt.PrdEndDate and tt.PrdNbr <> 0 and at.PrdNbr <> 0";
+                _jurisUtility.ExecuteSql(0, strSQL);
+                //MessageBox.Show(";;");
 
-         //       strSQL = "Delete from JournalEntry "
-       //  + "where JEDate < '" + dateTimePicker1.Value.ToString("MM/dd/yyyy") + "' ";
-         //       _jurisUtility.ExecuteNonQuery(0, strSQL);
 
                 strSQL = "update JournalEntry "
-                       + "Set JEPrdNbr = AP.newprd, "
-                       + " JEPrdYear = AP.newyr "
+                       + "Set JEPrdNbr = prdnbr, "
+                       + " JEPrdYear = prdyear "
                        + "From JournalEntry "
-                       + "inner join (select * from tmpPeriod where PrdNbr <> 0) as AP on JEPrdYear = prdyear and JEPrdNbr = prdnbr ";
-                _jurisUtility.ExecuteNonQuery(0, strSQL);
+                       + "       inner join (select * from tmpperiod where PrdNbr <> 0) as AP on JEPrdYear = oldyr and JEPrdNbr = oldprd ";
 
+                _jurisUtility.ExecuteNonQuery(0, strSQL);
 
 
                 strSQL = "update JEBatchDetail "
-                       + "Set JEBDPrdNbr = AP.newprd, "
-                       + " JEBDPrdYear = AP.newyr "
+                       + "Set JEBDPrdNbr = prdnbr, "
+                       + " JEBDPrdYear = prdyear "
                        + "From JEBatchDetail "
-                       + "inner join (select * from tmpPeriod where PrdNbr <> 0) as AP on JEBDPrdYear = prdyear and JEBDPrdNbr = prdnbr ";
+                       + "       inner join (select * from tmpperiod where PrdNbr <> 0) as AP on JEBDPrdYear = oldyr and JEBDPrdNbr = oldprd ";
+
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
                 UpdateStatus("Updating BilledExpenses.", 2, 20);
                 toolStripStatusLabel.Text = "Updating BilledExpenses";
                 statusStrip.Refresh();
                 Application.DoEvents();
+               
+
+                
+
+                strSQL = "insert into ChartBudget (ChbAccount, ChbPrdYear, ChbPeriod, ChbBudget, ChbNetChange) "
+                    + "SELECT distinct JEAccount, JEPrdYear, JEPrdNbr, 0.00 as Budget, 0.00 as Net "
+                    + "From JournalEntry "
+                    + "left join ChartBudget on ChbAccount = JEAccount and ChbPrdYear = JEPrdYear and ChbPeriod = JEPrdNbr "
+                    + "Where ChbAccount Is Null";
+                _jurisUtility.ExecuteNonQuery(0, strSQL);
+
+                strSQL = "Update ChartBudget "
+                       + "Set ChbNetChange = 0.00";
+                _jurisUtility.ExecuteNonQuery(0, strSQL);
+
+                //update non zero periods
+              //  strSQL = "Update ChartBudget "
+                //       + "Set ChbNetChange = JENetChange "
+                //       + "From ChartBudget "
+                 //      + "inner join ( "
+                 //      + "SELECT JEAccount, JEPrdYear, JEPrdNbr, sum(JEAmount) as JENetChange "
+                 //      + "FROM JournalEntry "
+                      // + "where JEDate >= convert(" + dteFirstDate.ToShortDateString() + ", varchar, 101) "
+                //       + "group by JEAccount, JEPrdNbr, JEPrdYear) as JE "
+                //       + "on JEAccount = ChbAccount and JEPrdYear = ChbPrdYear and JEPrdNbr = ChbPeriod";
+            //    _jurisUtility.ExecuteNonQuery(0, strSQL);
+             //   
+
+                 
+                 
 
                 strSQL = "update BilledExpenses "
-                       + "Set BEPrdNbr = AP.newprd, "
-                       + " BEPrdYear = AP.newyr "
+                       + "Set BEPrdNbr = prdnbr, "
+                       + " BEPrdYear = prdyear "
                        + "From BilledExpenses "
-                       + "inner join (select * from tmpPeriod where PrdNbr <> 0) as AP on BEPrdYear = prdyear and BEPrdNbr = prdnbr ";
+                       + "       inner join (select * from tmpperiod where PrdNbr <> 0) as AP on BEPrdYear = oldyr and BEPrdNbr = oldprd ";
+
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
                 UpdateStatus("Updating UnbilledExpense", 3, 20);
                 toolStripStatusLabel.Text = "Updating UnbilledExpense";
@@ -268,11 +322,15 @@ namespace JurisUtilityBase
                 Application.DoEvents();
 
 
+                //MessageBox.Show("kk");
+                
+
                 strSQL = "update UnbilledExpense "
-                       + "Set UEPrdNbr = AP.newprd, "
-                       + " UEPrdYear = AP.newyr "
+                       + "Set UEPrdNbr = prdnbr, "
+                       + " UEPrdYear = prdyear "
                        + "From UnbilledExpense "
-                       + "inner join (select * from tmpPeriod where PrdNbr <> 0) as AP on UEPrdYear = prdyear and UEPrdNbr = prdnbr ";
+                       + "       inner join (select * from tmpperiod where PrdNbr <> 0) as AP on UEPrdYear = oldyr and UEPrdNbr = oldprd ";
+
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
                 UpdateStatus("Updating BilledTime", 4, 20);
                 toolStripStatusLabel.Text = "Updating BilledTime";
@@ -281,10 +339,11 @@ namespace JurisUtilityBase
 
 
                 strSQL = "update BilledTime "
-                       + "Set BTPrdNbr = AP.newprd, "
-                       + " BTPrdYear = AP.newyr "
+                       + "Set BTPrdNbr = prdnbr, "
+                       + " BTPrdYear = prdyear "
                        + "From BilledTime "
-                       + "inner join (select * from tmpPeriod where PrdNbr <> 0) as AP on BTPrdYear = prdyear and BTPrdNbr = prdnbr ";
+                       + "       inner join (select * from tmpperiod where PrdNbr <> 0) as AP on BTPrdYear = oldyr and BTPrdNbr = oldprd ";
+
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
                 UpdateStatus("Updating UnbilledTime", 5, 20);
                 toolStripStatusLabel.Text = "Updating UnbilledTime";
@@ -293,10 +352,11 @@ namespace JurisUtilityBase
 
 
                 strSQL = "update UnbilledTime "
-                       + "Set UTPrdNbr = AP.newprd, "
-                       + " UTPrdYear =AP.newyr "
+                       + "Set UTPrdNbr = prdnbr, "
+                       + " UTPrdYear =prdyear "
                        + "From UnbilledTime "
-                       + "inner join (select * from tmpPeriod where PrdNbr <> 0) as AP on UTPrdYear = prdyear and UTPrdNbr = prdnbr ";
+                       + "       inner join (select * from tmpperiod where PrdNbr <> 0) as AP on UTPrdYear = oldyr and UTPrdNbr = oldprd ";
+
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
 
                 UpdateStatus("Updating ExpBatchDetail", 6, 20);
@@ -306,10 +366,10 @@ namespace JurisUtilityBase
 
 
                 strSQL = "Update ExpBatchDetail "
-                       + "Set EBDPrdNbr = AP.newprd, "
-                       + " EBDPrdYear = AP.newyr "
+                       + "Set EBDPrdNbr = prdnbr, "
+                       + " EBDPrdYear = prdyear "
                        + "From ExpBatchDetail "
-                       + "inner join (select * from tmpPeriod where PrdNbr <> 0) as AP on EBDPrdYear = prdyear and EBDPrdNbr = prdnbr ";
+                       + "       inner join (select * from tmpperiod where PrdNbr <> 0) as AP on EBDPrdYear = oldyr and EBDPrdNbr = oldprd ";
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
 
                 UpdateStatus("Updating ExpenseEntry", 7, 20);
@@ -319,10 +379,10 @@ namespace JurisUtilityBase
 
 
                 strSQL = "If Exists (Select * from sysObjects where name = 'ExpenseEntry') Update ExpenseEntry "
-                       + "Set PeriodNbr = AP.newprd, "
-                       + " PeriodYear = AP.newyr "
+                       + "Set PeriodNbr = prdnbr, "
+                       + " PeriodYear = prdyear "
                        + "From ExpenseEntry "
-                       + "inner join (select * from tmpPeriod where PrdNbr <> 0) as AP on PeriodYear = prdyear and PeriodNbr = prdnbr ";
+                       + "       inner join (select * from tmpperiod where PrdNbr <> 0) as AP on PeriodYear = oldyr and PeriodNbr = oldprd ";
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
 
                 UpdateStatus("Updating TimeBatchDetail", 8, 20);
@@ -332,10 +392,10 @@ namespace JurisUtilityBase
 
 
                 strSQL = "Update TimeBatchDetail "
-                       + "Set TBDPrdNbr = AP.newprd, "
-                       + " TBDPrdYear = AP.newyr "
+                       + "Set TBDPrdNbr = prdnbr, "
+                       + " TBDPrdYear = prdyear "
                        + "From TimeBatchDetail "
-                       + "inner join (select * from tmpPeriod where PrdNbr <> 0) as AP on TBDPrdYear = prdyear and TBDPrdNbr = prdnbr ";
+                       + "       inner join (select * from tmpperiod where PrdNbr <> 0) as AP on TBDPrdYear = oldyr and TBDPrdNbr = oldprd ";
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
 
                 UpdateStatus("Updating TimeEntry", 9, 20);
@@ -345,10 +405,11 @@ namespace JurisUtilityBase
 
 
                 strSQL = "If Exists (Select * from sysObjects where name = 'TimeEntry') Update TimeEntry "
-                       + "Set PeriodNumber = AP.newprd, "
-                       + " PeriodYear = AP.newyr "
+                       + "Set PeriodNumber = prdnbr, "
+                       + " PeriodYear = prdyear "
                        + "From TimeEntry "
-                       + "inner join (select * from tmpPeriod where PrdNbr <> 0) as AP on PeriodYear = prdyear and PeriodNumber = prdnbr ";
+                       + "       inner join (select * from tmpperiod where PrdNbr <> 0) as AP on PeriodYear = oldyr and PeriodNumber = oldprd ";
+
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
 
                 UpdateStatus("Updating LedgerHistory", 10, 20);
@@ -358,10 +419,10 @@ namespace JurisUtilityBase
 
 
                 strSQL = "update LedgerHistory "
-                       + "Set LHPrdNbr = AP.newprd, "
-                       + " LHPrdYear = AP.newyr "
+                       + "Set LHPrdNbr = prdnbr, "
+                       + " LHPrdYear = prdyear "
                        + "From LedgerHistory "
-                       + "inner join (select * from tmpPeriod where PrdNbr <> 0) as AP on LHPrdYear = prdyear and LHPrdNbr = prdnbr ";
+                       + "       inner join (select * from tmpperiod where PrdNbr <> 0) as AP on LHPrdYear = oldyr and LHPrdNbr = oldprd ";
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
 
                 UpdateStatus("Updating CashReceipt", 11, 20);
@@ -371,10 +432,10 @@ namespace JurisUtilityBase
 
 
                 strSQL = "Update CashReceipt "
-                       + "Set CRPrdNbr = AP.newprd, "
-                       + " CRPrdYear = AP.newyr "
+                       + "Set CRPrdNbr = prdnbr, "
+                       + " CRPrdYear = prdyear "
                        + "From CashReceipt "
-                       + "inner join (select * from tmpPeriod where PrdNbr <> 0) as AP on CRPrdYear = prdyear and CRPrdNbr = prdnbr ";
+                       + "       inner join (select * from tmpperiod where PrdNbr <> 0) as AP on CRPrdYear = oldyr and CRPrdNbr = oldprd ";
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
 
                 UpdateStatus("Updating CreditMemo", 12, 20);
@@ -384,10 +445,10 @@ namespace JurisUtilityBase
 
 
                 strSQL = "Update CreditMemo "
-                       + "Set CMPrdNbr = AP.newprd, "
-                       + " CMPrdYear = AP.newyr "
+                       + "Set CMPrdNbr = prdnbr, "
+                       + " CMPrdYear = prdyear "
                        + "From CreditMemo "
-                       + "inner join (select * from tmpPeriod where PrdNbr <> 0) as AP on CMPrdYear = prdyear and CMPrdNbr = prdnbr ";
+                       + "       inner join (select * from tmpperiod where PrdNbr <> 0) as AP on CMPrdYear = oldyr and CMPrdNbr = oldprd ";
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
 
                 UpdateStatus("Updating TrAdjBatchDetail", 13, 20);
@@ -397,10 +458,10 @@ namespace JurisUtilityBase
 
 
                 strSQL = "Update TrAdjBatchDetail "
-                       + "Set TABDPrdNbr = AP.newprd, "
-                       + " TABDPrdYear = AP.newyr "
+                       + "Set TABDPrdNbr = prdnbr, "
+                       + " TABDPrdYear = prdyear "
                        + "From TrAdjBatchDetail "
-                       + "inner join (select * from tmpPeriod where PrdNbr <> 0) as AP on TABDPrdYear = prdyear and TABDPrdNbr = prdnbr ";
+                       + "       inner join (select * from tmpperiod where PrdNbr <> 0) as AP on TABDPrdYear = oldyr and TABDPrdNbr = oldprd ";
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
 
                 UpdateStatus("Updating TrustSumByPrd", 14, 20);
@@ -416,10 +477,10 @@ namespace JurisUtilityBase
                 strSQL = "delete from TrustSumByPrd";
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
                 strSQL = "Update tmpTrustSumByPrd "
-                       + "Set TSPPrdNbr = AP.newprd, "
-                       + "TSPPrdYear = AP.newyr "
+                       + "Set TSPPrdNbr = prdnbr, "
+                       + "TSPPrdYear = prdyear "
                        + "From tmpTrustSumByPrd "
-                       + "inner join (select * from tmpPeriod where PrdNbr <> 0) as AP on TSPPrdYear = prdyear and TSPPrdNbr = prdnbr ";
+                       + "       inner join (select * from tmpperiod where PrdNbr <> 0) as AP on TSPPrdYear = oldyr and TSPPrdNbr = oldprd ";
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
                 strSQL = "insert into TrustSumByPrd (TSPMatter, TSPBank, TSPPrdYear, TSPPrdNbr, TSPDeposits, TSPPayments, TSPAdjustments) "
                        + "Select TSPMatter, TSPBank, TSPPrdYear, TSPPrdNbr, TSPDeposits, TSPPayments, TSPAdjustments from tmpTrustSumByPrd";
@@ -440,11 +501,11 @@ namespace JurisUtilityBase
                 strSQL = "delete from VenSumByPrd";
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
                 strSQL = "Update tmpVenSumByPrd "
-                       + "Set VSPPrdNbr = AP.newprd, "
-                       + "VSPPrdYear = AP.newyr "
+                       + "Set VSPPrdNbr = prdnbr, "
+                       + "VSPPrdYear = prdyear "
                        + "From tmpVenSumByPrd "
-                       + "inner join (select * from tmpPeriod where PrdNbr <> 0) as AP on VSPPrdYear = prdyear and VSPPrdNbr = prdnbr ";
-                    ;
+                       + "       inner join (select * from tmpperiod where PrdNbr <> 0) as AP on VSPPrdYear = oldyr and VSPPrdNbr = oldprd ";
+
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
 
                 strSQL = "insert into VenSumByPrd (VSPVendor, VSPPrdYear, VSPPrdNbr, VSPVouchers, VSPPayments, VSPDiscountsTaken) "
@@ -467,10 +528,10 @@ namespace JurisUtilityBase
                 strSQL = "delete from ExpSumByPrd";
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
                 strSQL = "Update tmpExpSumByPrd "
-                       + "Set ESPPrdNbr = AP.newprd, "
-                       + "ESPPrdYear = AP.newyr "
+                       + "Set ESPPrdNbr = prdnbr, "
+                       + "ESPPrdYear = prdyear "
                        + "From tmpExpSumByPrd "
-                       + "inner join (select * from tmpPeriod where PrdNbr <> 0) as AP on ESPPrdYear = prdyear and ESPPrdNbr = prdnbr ";
+                       + "       inner join (select * from tmpperiod where PrdNbr <> 0) as AP on ESPPrdYear = oldyr and ESPPrdNbr = oldprd ";
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
                 strSQL = "insert into ExpSumByPrd (ESPMatter, ESPExpCd, ESPPrdYear, "
                        + "ESPPrdNbr, ESPEntered, ESPBilledValue, ESPBilledAmt, ESPReceived, ESPAdjusted) "
@@ -493,10 +554,10 @@ namespace JurisUtilityBase
                 strSQL = "delete from FeeSumByPrd";
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
                 strSQL = "Update tmpFeeSumByPrd "
-                       + "Set FSPPrdNbr = AP.newprd, "
-                       + "FSPPrdYear = AP.newyr "
+                       + "Set FSPPrdNbr = prdnbr, "
+                       + "FSPPrdYear = prdyear "
                        + "From tmpFeeSumByPrd "
-                       + "inner join (select * from tmpPeriod where PrdNbr <> 0) as AP on FSPPrdYear = prdyear and FSPPrdNbr = prdnbr ";
+                       + "       inner join (select * from tmpperiod where PrdNbr <> 0) as AP on FSPPrdYear = oldyr and FSPPrdNbr = oldprd ";
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
                 strSQL = "insert into FeeSumByPrd (FSPMatter, FSPTkpr, FSPTaskCd, FSPActivityCd, FSPPrdYear, FSPPrdNbr, "
                        + "FSPWorkedHrsEntered, FSPNonBilHrsEntered, FSPBilHrsEntered, FSPFeeEnteredStdValue, "
@@ -515,22 +576,34 @@ namespace JurisUtilityBase
                 statusStrip.Refresh();
                 Application.DoEvents();
 
-                //reassign non zero
+               //reassign non zero
                 strSQL = "If Exists (Select * from sysObjects where name = 'tmpChartBudget') drop table tmpChartBudget";
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
                 strSQL = "select * into tmpChartBudget from ChartBudget";
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
                 strSQL = "Update tmpChartBudget "
-                        + "Set ChbPeriod = AP.newprd, "
-                        + "ChbPrdYear = AP.newyr "
+                        + "Set ChbPeriod = prdnbr, "
+                        + "ChbPrdYear = prdyear "
                         + "From tmpChartBudget "
-                        + "inner join (select * from tmpPeriod where PrdNbr <> 0) as AP on ChbPrdYear = prdyear and ChbPeriod = prdnbr ";
+                       + "       inner join (select * from tmpperiod where PrdNbr <> 0) as AP on ChbPrdYear = oldyr and ChbPeriod = oldprd ";
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
-                strSQL = "delete from ChartBudget ";
+                strSQL = "delete from chartbudget";
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
-                strSQL = "insert into chartbudget ([ChbAccount] ,[ChbPrdYear] ,[ChbPeriod] ,[ChbBudget] ,[ChbNetChange]) " +
-                    " select [ChbAccount] ,[ChbPrdYear] ,[ChbPeriod] ,[ChbBudget] ,[ChbNetChange] from tmpChartBudget ";
+                
+                strSQL = "insert into chartbudget ([ChbAccount],[ChbPrdYear] ,[ChbPeriod] ,[ChbBudget],[ChbNetChange]) "
+                    + " select ChbAccount,[ChbPrdYear] ,[ChbPeriod] ,[ChbBudget],[ChbNetChange] from tmpChartBudget";
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
+
+                //update zero periods
+                strSQL = "Update ChartBudget "
+                       + "Set ChbNetChange = Chng "
+                    + "From ChartBudget gg "
+                    + "inner join ( "
+                    + "SELECT ChbAccount, ChbPrdYear, sum(ChbNetChange) as Chng "
+                    + "FROM ChartBudget  "
+                    + "group by ChbAccount, ChbPrdYear) as JE  "
+                    + "on JE.ChbAccount = gg.ChbAccount and JE.ChbPrdYear = (gg.ChbPrdYear -1) and gg.ChbPeriod = 0 ";
+                _jurisUtility.ExecuteNonQuery(0, strSQL); 
 
 
                 strSQL = "select min(ayyear) as FirstYr from actngyear";
@@ -561,18 +634,18 @@ namespace JurisUtilityBase
                 strSQL = "delete from ActngPeriod";
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
                 strSQL = "insert into ActngPeriod (prdstartdate, prdenddate, prdnbr, prdyear, prdstate) " +
-                "(SELECT newdateStart, newdateend, newprd, newyr, prdstate FROM tmpPeriod)" ;
+                "(SELECT prdstartdate, prdenddate, prdnbr, prdyear, prdstate FROM tmpPeriod)";
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
                 strSQL = "EXEC sp_MSforeachtable \"ALTER TABLE ? CHECK CONSTRAINT all\"";
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
                 strSQL = "drop table tmpPeriod";
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
 
-                strSQL = "delete from actngyear where ayyear not in (select PrdYear from ActngPeriod)";
-                _jurisUtility.ExecuteNonQuery(0, strSQL);
+               // strSQL = "delete from actngyear where ayyear not in (select PrdYear from ActngPeriod)";
+              // _jurisUtility.ExecuteNonQuery(0, strSQL);
 
-                strSQL = "delete from documenttree where dtdocclass = 2000 and DTKeyL = '2020'";
-                _jurisUtility.ExecuteNonQuery(0, strSQL);
+               // strSQL = "delete from documenttree where dtdocclass = 2000 and DTKeyL = '2020'";
+              //  _jurisUtility.ExecuteNonQuery(0, strSQL);
 
 
                 strSQL = "Update ActngYear "
