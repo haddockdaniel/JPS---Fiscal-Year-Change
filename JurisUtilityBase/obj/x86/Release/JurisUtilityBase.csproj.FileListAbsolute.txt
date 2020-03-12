@@ -113,3 +113,4 @@ D:\Utility Repository\JPS---Fiscal-Year-Change\JurisUtilityBase\obj\x86\Release\
 D:\Utility Repository\JPS---Fiscal-Year-Change\JurisUtilityBase\obj\x86\Release\JurisUtilityBase.csproj.CopyComplete
 D:\Utility Repository\JPS---Fiscal-Year-Change\JurisUtilityBase\obj\x86\Release\JPS - Fiscal Year Change.exe
 D:\Utility Repository\JPS---Fiscal-Year-Change\JurisUtilityBase\obj\x86\Release\JPS - Fiscal Year Change.pdb
+D:\Utility Repository\JPS---Fiscal-Year-Change\JurisUtilityBase\obj\x86\Release\JurisUtilityBase.csprojAssemblyReference.cache

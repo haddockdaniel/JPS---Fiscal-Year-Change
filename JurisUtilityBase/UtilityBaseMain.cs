@@ -220,6 +220,9 @@ namespace JurisUtilityBase
                 strSQL = "select AYYear from ActngYear order by AYYear";
                 rsdb = _jurisUtility.RecordsetFromSQL(strSQL);
 
+                strSQL = "If Exists (Select * from sysObjects where name = 'tmpperiod') drop table tmpperiod";
+                _jurisUtility.ExecuteNonQuery(0, strSQL);
+
                 strSQL = "create table tmpperiod  (prdstartdate datetime null, prdenddate datetime null, prdnbr int null, prdyear int null, prdstate int null, oldPrd int null, oldYr int null)";
                 _jurisUtility.ExecuteSql(0, strSQL);
 
@@ -278,20 +281,8 @@ namespace JurisUtilityBase
                 toolStripStatusLabel.Text = "Updating BilledExpenses";
                 statusStrip.Refresh();
                 Application.DoEvents();
-               
 
-                
 
-                strSQL = "insert into ChartBudget (ChbAccount, ChbPrdYear, ChbPeriod, ChbBudget, ChbNetChange) "
-                    + "SELECT distinct JEAccount, JEPrdYear, JEPrdNbr, 0.00 as Budget, 0.00 as Net "
-                    + "From JournalEntry "
-                    + "left join ChartBudget on ChbAccount = JEAccount and ChbPrdYear = JEPrdYear and ChbPeriod = JEPrdNbr "
-                    + "Where ChbAccount Is Null";
-                _jurisUtility.ExecuteNonQuery(0, strSQL);
-
-                strSQL = "Update ChartBudget "
-                       + "Set ChbNetChange = 0.00";
-                _jurisUtility.ExecuteNonQuery(0, strSQL);
 
                 //update non zero periods
               //  strSQL = "Update ChartBudget "
@@ -469,9 +460,11 @@ namespace JurisUtilityBase
                 statusStrip.Refresh();
                 Application.DoEvents();
 
+                        strSQL = "If Exists (Select * from sysObjects where name = 'tmpTrustSumByPrd') drop table tmpTrustSumByPrd";
+                _jurisUtility.ExecuteNonQuery(0, strSQL); ;     
 
-                strSQL = "If Exists (Select * from sysObjects where name = 'tmpTrustSumByPrd') drop table tmpTrustSumByPrd";
-                _jurisUtility.ExecuteNonQuery(0, strSQL);
+
+        
                 strSQL = "select * into tmpTrustSumByPrd from TrustSumByPrd";
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
                 strSQL = "delete from TrustSumByPrd";
@@ -576,53 +569,85 @@ namespace JurisUtilityBase
                 statusStrip.Refresh();
                 Application.DoEvents();
 
-               //reassign non zero
-                strSQL = "If Exists (Select * from sysObjects where name = 'tmpChartBudget') drop table tmpChartBudget";
-                _jurisUtility.ExecuteNonQuery(0, strSQL);
-                strSQL = "select * into tmpChartBudget from ChartBudget";
-                _jurisUtility.ExecuteNonQuery(0, strSQL);
-                strSQL = "Update tmpChartBudget "
-                        + "Set ChbPeriod = prdnbr, "
-                        + "ChbPrdYear = prdyear "
-                        + "From tmpChartBudget "
-                       + "       inner join (select * from tmpperiod where PrdNbr <> 0) as AP on ChbPrdYear = oldyr and ChbPeriod = oldprd ";
-                _jurisUtility.ExecuteNonQuery(0, strSQL);
-                strSQL = "delete from chartbudget";
-                _jurisUtility.ExecuteNonQuery(0, strSQL);
-                
-                strSQL = "insert into chartbudget ([ChbAccount],[ChbPrdYear] ,[ChbPeriod] ,[ChbBudget],[ChbNetChange]) "
-                    + " select ChbAccount,[ChbPrdYear] ,[ChbPeriod] ,[ChbBudget],[ChbNetChange] from tmpChartBudget";
+                strSQL = "update ChartBudget "
+                    + " set chbprdyear=prdyear from tmpperiod "
+                    + " where chbprdyear=(select min(chbprdyear) from chartbudget) and chbperiod=0 "
+                    + " and prdyear=(select year(prdstartdate) from actngperiod where prdnbr=0 and chbprdyear=actngperiod.prdyear)";
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
 
-                //update zero periods
-                strSQL = "Update ChartBudget "
-                       + "Set ChbNetChange = Chng "
-                    + "From ChartBudget gg "
-                    + "inner join ( "
-                    + "SELECT ChbAccount, ChbPrdYear, sum(ChbNetChange) as Chng "
-                    + "FROM ChartBudget  "
-                    + "group by ChbAccount, ChbPrdYear) as JE  "
-                    + "on JE.ChbAccount = gg.ChbAccount and JE.ChbPrdYear = (gg.ChbPrdYear -1) and gg.ChbPeriod = 0 ";
-                _jurisUtility.ExecuteNonQuery(0, strSQL); 
+
+                strSQL = "If Exists (Select * from sysObjects where name = 'tmpRetEarn') drop table tmpRetEarn";
+                _jurisUtility.ExecuteNonQuery(0, strSQL);
+
+                strSQL = "select chtsysnbr as SysNbr into tmpRetEarn "
++ " from(select sysnbr, mainacct, case when charindex('-', subacct) = 0 then subacct else left(subacct, charindex('-', subacct) - 1) end as Sub1, "
++ " case when charindex('-', subacct) = 0 then '' else right(subacct, len(subacct) - charindex('-', subacct)) end as Sub2  "
++ " from(select sysnbr, case when charindex('-', AcctNbr) = 0 then AcctNbr else left(acctnbr, charindex('-', acctnbr) - 1) end As Mainacct, "
++ " case when charindex('-', AcctNbr) = 0 then '' else right(acctnbr, len(acctnbr) - charindex('-', acctnbr)) end As SubAcct, AcctNbr "
++ " from(select spnbrvalue as SysNbr, case when charindex(',', sptxtvalue) = 0 then sptxtvalue else left(sptxtvalue, charindex(',', sptxtvalue) - 1) end as AcctNbr "
++ "  from sysparam where spname = 'RetEarnAcc')REA) R2) RetEarn, "
++ "  (select chtsysnbr, chtmainacct, coas1code, coas2code, coas3code, coas4code "
++ "   from chartofaccounts "
++ "  left outer  join COASubAccount1 on coas1id = chtsubacct1 "
++ " left outer join coasubaccount2 on coas2id = chtsubacct2 "
++ "  left outer join coasubaccount3 on coas3id = chtsubacct3 "
++ "  left outer join coasubaccount4 on coas4id = chtsubacct4) COA "
++ "  where(chtsysnbr = sysnbr and sysnbr <> 0) or(sysnbr = 0 and chtmainacct = mainacct and coas1code is null) or "
++ "       (sysnbr = 0 and chtmainacct = mainacct and coas1code = right('00000000' + sub1, 8) and coas2code is null) or "
+ + "             (sysnbr = 0 and chtmainacct = mainacct and coas1code = right('00000000' + sub1, 8)  and coas2code = right('00000000' + sub2, 8)  and coas3code is null) ";
+                _jurisUtility.ExecuteNonQuery(0, strSQL);
 
 
-                strSQL = "select min(ayyear) as FirstYr from actngyear";
-                rsdb = _jurisUtility.RecordsetFromSQL(strSQL);
-
-                DateTime tempdt = Convert.ToDateTime("01/01/" + rsdb.Tables[0].Rows[0][0].ToString());
-
-                int diff = (dteFirstDate.Year - tempdt.Year);
-                
-
-                //reassign zero
+                strSQL = "Insert into ChartBudget(chbaccount, chbprdyear, chbperiod, chbbudget, chbnetchange) "
+                    + "select chtsysnbr, prdyear, 0, 0.00, 0.00 "
+                    + " from (select chtsysnbr, prdyear, prdnbr from chartofaccounts, actngperiod where prdyear>=(select min(chbprdyear) from chartbudget) and prdnbr=0) CB "
+                   + " left outer join chartbudget on chbaccount=chtsysnbr and chbprdyear=prdyear and chbperiod=prdnbr "
+                   + " where chbaccount is null";
 
 
                 strSQL = "Update ChartBudget "
-                        + " set ChbPrdYear = ChbPrdYear + " + diff.ToString() 
-                        + " where  ChbPeriod = 0";
+                    + " set chbnetchange=0 where chbperiod=0 and chbprdyear<>(select min(chbprdyear) from chartbudget) ";
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
 
-				
+                strSQL = "Update ChartBudget "
+                        + "Set chbperiod = prdnbr, "
+                       + " chbprdyear = prdyear "
+                       + "From ChartBudget "
+                       + "       inner join (select * from tmpperiod where PrdNbr <> 0) as AP on chbprdyear = oldyr and chbperiod = oldprd ";
+                _jurisUtility.ExecuteNonQuery(0, strSQL);
+
+
+                strSQL = "Update ChartBudget"
+                    + " set chbnetchange=begbalance "
+                    + " from ( select chbaccount as Acct, AYYear, sum(case when chbprdyear<AYYear then chbnetchange else 0 end) as BegBalance " 
+                    + "  from chartbudget " 
+                    + " inner join chartofaccounts on chtsysnbr = chbaccount, actngyear " 
+                    + " where chtfinstmttype = 'B'  and  ayyear> (select min(chbprdyear) from chartbudget) "
+                    + " group by chbaccount, AYYear) CB "
+                    + " where chbaccount=Acct and chbprdyear=ayyear and chbperiod=0";
+                _jurisUtility.ExecuteNonQuery(0, strSQL);
+
+
+                strSQL = "Update ChartBudget set chbnetchange=0.00 from chartbudget "
+                           + " inner join chartofaccounts on chtsysnbr = chbaccount  where chtfinstmttype = 'P' and chbperiod=0";
+                _jurisUtility.ExecuteNonQuery(0, strSQL);
+
+                strSQL = "Update ChartBudget set chbnetchange=0.00 from chartbudget, tmpRetEarn where chbaccount=sysnbr";
+                _jurisUtility.ExecuteNonQuery(0, strSQL);
+
+                strSQL = "Update ChartBudget "
+                + " set chbnetchange = Total " 
+                + " from( select chbprdyear as PYear, chbaccount as Account, sum(total * -1) as Total "
+                 + " from(select sysnbr, chbprdyear as PYear, sum(chbnetchange) as Total "
+                + " from chartbudget, tmpRetEarn "
+                 + " where chbperiod = 0 and chbaccount<>sysnbr"
+                + " group by sysnbr, chbprdyear) CB "
+               + " inner join chartbudget on chbprdyear = pyear "
+               + "  where chbprdyear = pyear  and chbperiod = 0 and chbaccount=sysnbr "
+                + " group by chbprdyear, chbaccount) CB "
+                 + "  where account=chbaccount and chbprdyear=pyear and chbperiod=0";
+                _jurisUtility.ExecuteNonQuery(0, strSQL);
+
 
                 UpdateStatus("Updating Accounting Year", 19, 20);
                 toolStripStatusLabel.Text = "Updating Accounting Year";
