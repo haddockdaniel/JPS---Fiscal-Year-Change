@@ -217,6 +217,15 @@ namespace JurisUtilityBase
 
                 rsdb.Clear();
 
+
+                strSQL = "select prdenddate from actngperiod where prdnbr = (select spnbrvalue from sysparam where spname = 'CurAcctPrdNbr') and prdyear = (select spnbrvalue from sysparam where spname = 'CurAcctPrdYear')";
+                
+                rsdb = _jurisUtility.RecordsetFromSQL(strSQL);
+
+                string CurEndDate = rsdb.Tables[0].Rows[0][0].ToString();
+
+                rsdb.Clear();
+
                 strSQL = "select AYYear from ActngYear order by AYYear";
                 rsdb = _jurisUtility.RecordsetFromSQL(strSQL);
 
@@ -616,6 +625,9 @@ namespace JurisUtilityBase
                        + "       inner join (select * from tmpperiod where PrdNbr <> 0) as AP on chbprdyear = oldyr and chbperiod = oldprd ";
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
 
+                strSQL = "Update ChartBudget set chbnetchange=0.00 from chartbudget, tmpRetEarn where chbaccount=sysnbr and chbperiod=0";
+                _jurisUtility.ExecuteNonQuery(0, strSQL);
+
 
                 strSQL = "Update ChartBudget"
                     + " set chbnetchange=begbalance "
@@ -632,27 +644,30 @@ namespace JurisUtilityBase
                            + " inner join chartofaccounts on chtsysnbr = chbaccount  where chtfinstmttype = 'P' and chbperiod=0";
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
 
-                strSQL = "Update ChartBudget set chbnetchange=0.00 from chartbudget, tmpRetEarn where chbaccount=sysnbr";
+          
+
+                  strSQL = "Update ChartBudget "
+                  +" set chbnetchange = Total " 
+                  +" from( select chbprdyear as PYear, chbaccount as Account, sum(total * -1) as Total "
+                   +" from(select sysnbr, chbprdyear as PYear, sum(chbnetchange) as Total "
+                    +" from chartbudget, tmpRetEarn "
+                    +" where chbperiod = 0 and chbaccount<>sysnbr"
+                    +" group by sysnbr, chbprdyear) CB "
+                    +" inner join chartbudget on chbprdyear = pyear "
+                    +"  where chbprdyear = pyear  and chbperiod = 0 and chbaccount=sysnbr "
+                    +" group by chbprdyear, chbaccount) CB "
+                   +"  where account=chbaccount and chbprdyear=pyear and chbperiod=0";
+                 
+
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
-
-                strSQL = "Update ChartBudget "
-                + " set chbnetchange = Total " 
-                + " from( select chbprdyear as PYear, chbaccount as Account, sum(total * -1) as Total "
-                 + " from(select sysnbr, chbprdyear as PYear, sum(chbnetchange) as Total "
-                + " from chartbudget, tmpRetEarn "
-                 + " where chbperiod = 0 and chbaccount<>sysnbr"
-                + " group by sysnbr, chbprdyear) CB "
-               + " inner join chartbudget on chbprdyear = pyear "
-               + "  where chbprdyear = pyear  and chbperiod = 0 and chbaccount=sysnbr "
-                + " group by chbprdyear, chbaccount) CB "
-                 + "  where account=chbaccount and chbprdyear=pyear and chbperiod=0";
-                _jurisUtility.ExecuteNonQuery(0, strSQL);
-
-
                 UpdateStatus("Updating Accounting Year", 19, 20);
                 toolStripStatusLabel.Text = "Updating Accounting Year";
                 statusStrip.Refresh();
                 Application.DoEvents();
+
+
+
+
 
                 strSQL = "EXEC sp_MSforeachtable \"ALTER TABLE ? NOCHECK CONSTRAINT all\"";
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
@@ -674,9 +689,24 @@ namespace JurisUtilityBase
 
 
                 strSQL = "Update ActngYear "
-                            + "set AYCloseStatus = 'N' "
-                            + "where AYYear > = (select MIN(JEPrdYear)-1 as FirstYear from JournalEntry)";
+                            + "set AYCloseStatus = 'Y' where ayyear<>(select max(jeprdyear) from journalentry)";
                 _jurisUtility.ExecuteNonQuery(0, strSQL);
+
+                strSQL = " update sysparam set spnbrvalue = prdnbr "
++ " from actngperiod "
++ " where prdenddate = convert(varchar(10),'" + CurEndDate + "',101) and prdnbr<>0 and spname = 'CurAcctPrdNbr' ";
+                _jurisUtility.ExecuteNonQuery(0, strSQL);
+
+
+
+                strSQL = "update sysparam set spnbrvalue = prdyear "
++ " from actngperiod "
++ " where prdenddate = convert(varchar(10),'" + CurEndDate + "',101) and prdnbr<>0 and spname = 'CurAcctPrdYear' ";
+                _jurisUtility.ExecuteNonQuery(0, strSQL);
+
+
+
+
 
                 UpdateStatus("All tables updated.", 20, 20);
                 WriteLog("FiscalYearChangeTool: Accounting Year Changed to start in " + dateTimePicker1.Value.ToString("MM/dd/yyyy"));
